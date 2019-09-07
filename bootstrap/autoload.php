@@ -1,4 +1,4 @@
 <?php
 $basePath = dirname(__DIR__);
 
-require $basePath.'./vendor/autoload.php';
+require $basePath.'/vendor/autoload.php';

@@ -4,11 +4,31 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9689707832c9c5276eec250641d608a1
+class ComposerStaticInit953ed3ca1e4b92619cb4d695ff5218da
 {
+    public static $files = array (
+        '73ffdb06951120bedeacf59cc037137b' => __DIR__ . '/../..' . '/app/Function/function.php',
+    );
+
+    public static $prefixLengthsPsr4 = array (
+        'a' => 
+        array (
+            'app\\' => 4,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'app\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app',
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit953ed3ca1e4b92619cb4d695ff5218da::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit953ed3ca1e4b92619cb4d695ff5218da::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }
