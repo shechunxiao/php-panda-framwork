@@ -1,7 +1,5 @@
 <?php
 
-/**
- * 引入Composer自动加载类
- */
-require './../bootstrap/autoload.php';
+//Composer自动加载
+require __DIR__.'/../bootstrap/autoload.php';
 
