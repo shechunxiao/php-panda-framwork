@@ -116,6 +116,7 @@ try {
     /**
      * 事务提交的问题
      */
+
 //    $DB->setAttribute(PDO::ATTR_AUTOCOMMIT,false);  //设置手动提交事务
 //    $DB->beginTransaction();
 //    $res = $DB->query('update first set name= "dddds2323" where id>1 and id <4');
