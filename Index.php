@@ -89,14 +89,16 @@ require 'bootstrap/autoload.php';
  *
  *
  */
-$dotenv  =  Dotenv::create(__DIR__);
-$dotenv->load();
-$bbb = $_ENV;
-$aaa = getenv('APP_KEY');
-var_dump($aaa);
-var_dump($bbb);
 
-
+/**
+ * 环境变量composer包
+ */
+//$dotenv  =  Dotenv::create(__DIR__);
+//$dotenv->load();
+//$bbb = $_ENV;
+//$aaa = getenv('APP_KEY');
+//var_dump($aaa);
+//var_dump($bbb);
 
 try {
     $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
@@ -110,6 +112,20 @@ try {
         PDO::ATTR_STRINGIFY_FETCHES => false,
         PDO::ATTR_EMULATE_PREPARES=>false
     ]);
+
+    /**
+     * 事务提交的问题
+     */
+//    $DB->setAttribute(PDO::ATTR_AUTOCOMMIT,false);  //设置手动提交事务
+//    $DB->beginTransaction();
+//    $res = $DB->query('update first set name= "dddds2323" where id>1 and id <4');
+//    echo $res->rowCount();
+//    if ($res->rowCount()){
+//        $DB->commit();
+//    }else{
+//        $DB->rollBack();
+//    }
+
 
 //    $DB->setAttribute(PDO::ATTR_ORACLE_NULLS,PDO::NULL_TO_STRING);
 //    print $DB->errorCode();
@@ -165,11 +181,11 @@ try {
 //    var_dump($re);
 
 //    throw new InvalidArgumentException('Non-numeric value passed to increment method.');
-    $query = "select id,name from first where id = :id";
-    $st = $DB->prepare($query);
-    $st->execute([':id'=>2]);
-    $re = $st->fetchAll();
-    var_dump($re);
+//    $query = "select id,name from first where id = :id";
+//    $st = $DB->prepare($query);
+//    $st->execute([':id'=>2]);
+//    $re = $st->fetchAll();
+//    var_dump($re);
 
 //    foreach ($re as $value){
 //        $te[] = $value['test'];
