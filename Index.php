@@ -4,6 +4,10 @@ use Dotenv\Dotenv;
 
 require 'bootstrap/autoload.php';
 
+
+var_dump(__DIR__);
+$a = include __DIR__.'/config/app.php';
+var_dump($a);
 /**
  * 总结知识点
  * PDO
