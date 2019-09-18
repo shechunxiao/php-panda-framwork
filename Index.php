@@ -91,8 +91,10 @@ require 'bootstrap/autoload.php';
  */
 $dotenv  =  Dotenv::create(__DIR__);
 $dotenv->load();
+$bbb = $_ENV;
 $aaa = getenv('APP_KEY');
 var_dump($aaa);
+var_dump($bbb);
 
 
 
