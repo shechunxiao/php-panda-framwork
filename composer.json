@@ -9,6 +9,7 @@
     ],
     "license": "MIT",
     "require": {
+        "vlucas/phpdotenv": "^3.6"
     },
     "autoload": {
         "psr-4": {
