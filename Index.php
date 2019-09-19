@@ -1,13 +1,29 @@
 <?php
 
 use Dotenv\Dotenv;
+use function Composer\Autoload\includeFile;
 
 require 'bootstrap/autoload.php';
 
+//$a = include __DIR__.'/config/app.php';
+//print_r($a);
+//print_r($a['two']);
+//print_r($a['two']['two_age']);
+//$b = require __DIR__.'/config/test.php';
+//print_r($b);
+//$c = new test();
+//$c->index();
+//$ccc = include __DIR__.'/config/app.php';
+//print_r($ccc);
+//$excep = new Exception();
+//$messaage = $excep->getMessage();
+//print_r($messaage.'333');
 
-var_dump(__DIR__);
-$a = include __DIR__.'/config/app.php';
-var_dump($a);
+//$arr = ['a'=>'张三','b'=>'李四','c'=>'王二'];
+//extract($arr);
+//echo "{$a}";
+//echo "{$b}";
+
 /**
  * 总结知识点
  * PDO
