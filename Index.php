@@ -4,6 +4,7 @@ use Dotenv\Dotenv;
 use function Composer\Autoload\includeFile;
 
 require 'bootstrap/autoload.php';
+//echo date('Y-m-d H:i:s');
 
 //$a = include __DIR__.'/config/app.php';
 //print_r($a);
@@ -132,6 +133,9 @@ try {
         PDO::ATTR_STRINGIFY_FETCHES => false,
         PDO::ATTR_EMULATE_PREPARES=>false
     ]);
+    //聚合函数有，count(),max,min,avg,sum
+    $res = $DB->query('select a.*,b.*,c.*,b.id as bid,c.id as cid from first a inner join first_extend b on a.id=b.first_id  join first_two c on a.id=c.first_id');
+    var_dump($res->fetchAll());
 
     /**
      * 事务提交的问题
