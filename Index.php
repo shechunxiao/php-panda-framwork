@@ -33,19 +33,22 @@ require 'bootstrap/autoload.php';
 //    $test = new Test();
 //    $test->index();
 
-//如何实现数据库的封装
+/**
+ * 如何实现数据库的封装
+ */
 //    $res = Db::table('first_extend')->select();
 //    var_dump($res);
 
 /**
  * 环境变量composer包
  */
-$dotenv  =  Dotenv::create(__DIR__);
-$dotenv->load();
-$bbb = $_ENV;
-$aaa = getenv('APP_KEY');
-var_dump($aaa);
-var_dump($bbb);
+//$dotenv  =  Dotenv::create(__DIR__);
+//$dotenv->load();
+//$bbb = $_ENV;
+//$aaa = getenv('APP_KEY');
+//var_dump($aaa);
+//var_dump($bbb);
+throw new Exception('2 is not allowed as a parameter', 6);
 
 /**
  * 总结知识点
