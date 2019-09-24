@@ -13,13 +13,14 @@
     },
     "autoload": {
         "psr-4": {
-            "app\\": "app/"
+            "App\\": "app/",
+            "memory\\": "vendor/memory"
         },
         "files": [
             "app/Function/function.php"
         ],
         "classmap": [
-
+            "classmap"
         ]
     }
 }

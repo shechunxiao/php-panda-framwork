@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controller\FirstController;
 use Dotenv\Dotenv;
+use memory\Facades\Db;
 use function Composer\Autoload\includeFile;
 
 require 'bootstrap/autoload.php';
@@ -10,7 +12,7 @@ require 'bootstrap/autoload.php';
 //print_r($a);
 //print_r($a['two']);
 //print_r($a['two']['two_age']);
-//$b = require __DIR__.'/config/test.php';
+//$b = require __DIR__.'/config/Test.php';
 //print_r($b);
 //$c = new test();
 //$c->index();
@@ -24,6 +26,26 @@ require 'bootstrap/autoload.php';
 //extract($arr);
 //echo "{$a}";
 //echo "{$b}";
+
+//    $first = new FirstController();
+//    $first->index();
+//classmap加载测试,更新了composer.json文件，一定要通过命令行执行  composer dump-autoload -o 来更新一下配置文件，否则自动加载是不生效的
+//    $test = new Test();
+//    $test->index();
+
+//如何实现数据库的封装
+//    $res = Db::table('first_extend')->select();
+//    var_dump($res);
+
+/**
+ * 环境变量composer包
+ */
+$dotenv  =  Dotenv::create(__DIR__);
+$dotenv->load();
+$bbb = $_ENV;
+$aaa = getenv('APP_KEY');
+var_dump($aaa);
+var_dump($bbb);
 
 /**
  * 总结知识点
@@ -111,16 +133,6 @@ require 'bootstrap/autoload.php';
  *
  */
 
-/**
- * 环境变量composer包
- */
-//$dotenv  =  Dotenv::create(__DIR__);
-//$dotenv->load();
-//$bbb = $_ENV;
-//$aaa = getenv('APP_KEY');
-//var_dump($aaa);
-//var_dump($bbb);
-
 try {
     $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
         PDO::ATTR_PERSISTENT=>false,
@@ -134,8 +146,8 @@ try {
         PDO::ATTR_EMULATE_PREPARES=>false
     ]);
     //聚合函数有，count(),max,min,avg,sum
-    $res = $DB->query('select a.*,b.*,c.*,b.id as bid,c.id as cid from first a inner join first_extend b on a.id=b.first_id  join first_two c on a.id=c.first_id');
-    var_dump($res->fetchAll());
+//    $res = $DB->query('select a.*,b.*,c.*,b.id as bid,c.id as cid from first a inner join first_extend b on a.id=b.first_id  join first_two c on a.id=c.first_id');
+//    var_dump($res->fetchAll());
 
     /**
      * 事务提交的问题
