@@ -48,7 +48,148 @@ require 'bootstrap/autoload.php';
 //$aaa = getenv('APP_KEY');
 //var_dump($aaa);
 //var_dump($bbb);
-throw new Exception('2 is not allowed as a parameter', 6);
+/**
+ * 怎么输出的内容
+ */
+//$a = "<div>
+//    <div style='background: red;'>张三</div>
+//    <div style='background: green'>李四</div>
+//    <a href='http://www.baidu.com'>李四</a>
+//</div>";
+//echo $a;
+//die();
+
+/**
+ * 输出内容include
+ */
+//ob_start();
+//$b = include './test.html';
+//$content = ob_get_clean();
+//echo $content;
+//die();
+
+/**
+ * return view视图的模板是怎么引入内容的,之前需要解析编译
+ */
+//function view($str){
+//    $arr = explode('.',$str);
+//    $path = __DIR__.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR;
+//    $path .= $arr[0].DIRECTORY_SEPARATOR;
+//    $path .= $arr[1].'.html';
+//    if (!file_exists($path)){
+//        return '文件不存在';
+//    }else{
+//        ob_start();
+//        include $path;
+//        $content = ob_get_clean();
+//        return $content;
+//    }
+//}
+//$view = view('index.first');
+//echo $view;
+//die();
+
+//var_dump(is_callable(array(new FirstController('fdfdds'),'test')));
+//die();
+
+
+$message = '默认';
+set_exception_handler([new FirstController($message),'myException']);
+//throw new \App\Http\Controller\Exception('fdsffdfdsdsds');
+try{
+    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
+        PDO::ATTR_PERSISTENT=>false,
+        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
+//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
+        PDO::ATTR_STRINGIFY_FETCHES => false,
+        PDO::ATTR_EMULATE_PREPARES=>false
+    ]);
+    $DB->query('select * from tefsfsdfdsfds');
+}catch (Exception $e){
+   throw new \App\Http\Controller\PdoException('fsdfdsfdssdfdsdf');
+}
+
+
+die();
+
+function checkNum($number)
+{
+    if($number==1)
+    {
+        throw new Exception("Value must be 1 or below");
+    }elseif($number==2){
+        throw new PDOException('FSDFD');
+    }elseif ($number == 3){
+        throw new RuntimeException('fdsfddsfd');
+    }else{
+        echo '默认';
+        throw new \App\Http\Controller\Exception('自定义Exception');
+    }
+    return true;
+}
+try{
+    checkNum(4);
+}catch (\App\Http\Controller\Exception $e){
+    echo $e->getMessage();
+}
+catch (PDOException $e){
+    echo $e->getMessage();
+}catch(Exception $ee){
+    echo $ee->getMessage();
+}catch(RuntimeException $eee){
+    echo $eee->getMessage();
+}
+die();
+
+try{
+    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
+        PDO::ATTR_PERSISTENT=>false,
+        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
+//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
+        PDO::ATTR_STRINGIFY_FETCHES => false,
+        PDO::ATTR_EMULATE_PREPARES=>false
+    ]);
+    $DB->query('select * from tefsfsdfdsfds');
+
+}catch (\App\Http\Controller\Exception $e){
+    echo 111;
+//    print_r($e->getMessage());
+//    echo '<br>';
+//    print_r($e->getCode());
+//    echo '<br>';
+//    print_r($e->getFile());
+//    echo '<br>';
+//    print_r($e->getLine());
+//    echo '<br>';
+//    print_r($e->getPrevious());
+//    echo '<br>';
+//    print_r($e->getTrace());
+//    echo '<br>';
+//    print_r($e->getTraceAsString());
+//    echo '<br>';
+//    echo '<br>';
+//    echo '<br>';
+//    echo '<br>';
+//    echo '<br>';
+//    echo '<br>';
+//    echo '<br>';
+//    echo '<br>';
+//    $ex = new \App\Http\Controller\Exception();
+//    echo $ex;
+}catch (\PDOException $e){
+//   throw  $e;
+
+}
+die();
+
 
 /**
  * 总结知识点
