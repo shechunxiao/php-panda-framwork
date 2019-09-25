@@ -92,26 +92,50 @@ require 'bootstrap/autoload.php';
 //var_dump(is_callable(array(new FirstController('fdfdds'),'test')));
 //die();
 
-
 $message = '默认';
 set_exception_handler([new FirstController($message),'myException']);
-//throw new \App\Http\Controller\Exception('fdsffdfdsdsds');
-try{
-    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
-        PDO::ATTR_PERSISTENT=>false,
-        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
-//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
-        PDO::ATTR_STRINGIFY_FETCHES => false,
-        PDO::ATTR_EMULATE_PREPARES=>false
-    ]);
-    $DB->query('select * from tefsfsdfdsfds');
-}catch (Exception $e){
-   throw new \App\Http\Controller\PdoException('fsdfdsfdssdfdsdf');
+
+if (true){
+    throw new Exception('啦啦啦啦');
 }
+//$DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
+//    PDO::ATTR_PERSISTENT=>false,
+//    PDO::ATTR_CASE=>PDO::CASE_NATURAL,
+//    PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT, //静默模式的PDOException报错方式
+////    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, //自己抛出错误的报错模式
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
+//    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+//    PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
+//    PDO::ATTR_STRINGIFY_FETCHES => false,
+//    PDO::ATTR_EMULATE_PREPARES=>false
+//]);
+//
+//$DB->query('select * from first11 ');
+//throw new Exception('fdfddfs');
+
+
+die();
+
+//throw new \App\Http\Controller\Exception('fdsffdfdsdsds');
+//try{
+//    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
+//        PDO::ATTR_PERSISTENT=>false,
+//        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
+//        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
+//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+//        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
+//        PDO::ATTR_STRINGIFY_FETCHES => false,
+//        PDO::ATTR_EMULATE_PREPARES=>false
+//    ]);
+//    $DB->query('select * from tefsfsdfdsfds');
+//
+//
+//}catch (Exception $e){
+//   echo $e->getMessage();
+//}
 
 
 die();

@@ -16,8 +16,9 @@ class FirstController
 
     public function myException($e)
     {
-        echo $this->message.'什么情况';
-        echo $e;
+        echo $e->getMessage();
+        echo '<br>';
+        echo $e->getLine();
     }
     public function test(){
 
