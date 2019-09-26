@@ -3,6 +3,8 @@
 use App\Http\Controller\FirstController;
 use Dotenv\Dotenv;
 use memory\Facades\Db;
+use App\Http\Controller\Exception;
+use think\exception\PDOException;
 use function Composer\Autoload\includeFile;
 
 require 'bootstrap/autoload.php';
@@ -94,10 +96,43 @@ require 'bootstrap/autoload.php';
 
 $message = '默认';
 set_exception_handler([new FirstController($message),'myException']);
+set_error_handler([new FirstController($message),'myError']);
+//error_reporting('E_WARNING'); //错误报告级别，可以实现debug是否为true的开关功能.
 
-if (true){
-    throw new Exception('啦啦啦啦');
-}
+echo ['name'=>1231321];
+
+
+//echo 222;
+
+//$a = 2;
+//if ($a > 1){
+//    throw  new \App\Http\Controller\PdoException('a>1,a必须小于等于1');
+//}
+
+//die();
+//if (true){
+//    throw new \App\Http\Controller\PdoException('啦啦啦啦3242432432');
+//}
+//try{
+//    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
+//        PDO::ATTR_PERSISTENT=>false,
+//        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
+////        PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT, //静默模式的PDOException报错方式
+////        PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING, //静默模式的PDOException报错方式
+//    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, //自己抛出错误的报错模式
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
+//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+//        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
+//        PDO::ATTR_STRINGIFY_FETCHES => false,
+//        PDO::ATTR_EMULATE_PREPARES=>false
+//    ]);
+//    $DB->query('select * from first2');
+//}catch (\PDOException $e) {
+//    throw $e;
+//}
+//die();
+
 //$DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
 //    PDO::ATTR_PERSISTENT=>false,
 //    PDO::ATTR_CASE=>PDO::CASE_NATURAL,
