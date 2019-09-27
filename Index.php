@@ -94,15 +94,45 @@ require 'bootstrap/autoload.php';
 //var_dump(is_callable(array(new FirstController('fdfdds'),'test')));
 //die();
 
-$message = '默认';
-set_exception_handler([new FirstController($message),'myException']);
-set_error_handler([new FirstController($message),'myError']);
+//$message = '默认';
+//set_exception_handler([new FirstController($message),'myException']);
+//set_error_handler([new FirstController($message),'myError'],E_ALL );
+//register_shutdown_function('shutdown_program');
+//function shutdown_program(){
+//    echo '3324';
+//}
 //error_reporting('E_WARNING'); //错误报告级别，可以实现debug是否为true的开关功能.
+//echo ['name'=>1231321];
+// 不报告任何级别的错误
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+////以下显示系统级别的错误，为语法错误等
+function my_error($errno,$errstr,$errfile,$errline,$errcontext)
+{
+       var_dump($errno);
+       var_dump($errstr);
+       var_dump($errfile);
+       var_dump($errline);
+       var_dump($errcontext);
+}
 
-echo ['name'=>1231321];
+set_error_handler("my_error");
+try {
+    require_once 'test.php';
+//    func_not_exists("hello world");
+} catch (\Exception $exception) {
+    echo 111;
+    var_export($exception);
+} catch (\ErrorException $error) {
+    // 就是这里了，try catch 捕捉了 Error
+    echo 222;
+    var_export($error);
+}
+//$a = new fdsfds();
+//$file=fopen("aaa.txt","r+");//打开不存在的文件，会出现致命错误
 
 
-//echo 222;
+//trigger_error('fsdfds');
 
 //$a = 2;
 //if ($a > 1){

@@ -28,9 +28,8 @@ class FirstController
         echo $content.$this->content;
     }
     public function myError(){
-        $error = error_get_last();
-        echo $error;
-        echo '出错了';
+
+        echo '自定义错误';
     }
 
 
