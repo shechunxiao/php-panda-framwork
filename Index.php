@@ -116,18 +116,18 @@ function appShutdown(){
     }
     echo '自定义错误';
 }
-$a = m;
 //echo 111
 ////////以下显示系统级别的错误，为语法错误等
-//function my_error($errno,$errstr,$errfile,$errline,$errcontext)
-//{
-//       var_dump($errno);
-//       var_dump($errstr);
-//       var_dump($errfile);
-//       var_dump($errline);
-//       var_dump($errcontext);
-//}
-//set_error_handler("my_error",E_ALL ^ E_NOTICE);
+function my_error($errno,$errstr,$errfile,$errline,$errcontext)
+{
+       var_dump($errno);
+       var_dump($errstr);
+       var_dump($errfile);
+       var_dump($errline);
+       var_dump($errcontext);
+}
+set_error_handler("my_error",E_ALL ^ E_NOTICE);
+require 'fsfdsds.text';
 /**
  * 错误
  */
