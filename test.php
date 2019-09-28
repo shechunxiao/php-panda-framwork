@@ -16,7 +16,7 @@ ini_set('display_errors', false);
 // 线上环境强烈建议开启 记录错误日志
 ini_set('log_errors', false);
 // 错误日志的位置 注意：如果 error_log 的路径有误的话 display_errors 会被强制打开 回显错误到标准输出
-ini_set('error_log', __DIR__ . '/error.text');
+ini_set('error_log', __DIR__ . '/09-28error.log');
 //set_exception_handler([new \App\Http\Controller\FirstController('FirstController'),'myException']);
 // 以上为 php 标准错误处理 的设定
 
