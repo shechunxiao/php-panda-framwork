@@ -104,30 +104,35 @@ require 'bootstrap/autoload.php';
 //error_reporting('E_WARNING'); //错误报告级别，可以实现debug是否为true的开关功能.
 //echo ['name'=>1231321];
 // 不报告任何级别的错误
-error_reporting(E_ALL);
-ini_set('display_errors', true);
-////以下显示系统级别的错误，为语法错误等
-function my_error($errno,$errstr,$errfile,$errline,$errcontext)
-{
-       var_dump($errno);
-       var_dump($errstr);
-       var_dump($errfile);
-       var_dump($errline);
-       var_dump($errcontext);
-}
+error_reporting(0);
+//ini_set('display_errors', true);
 
-set_error_handler("my_error");
-try {
-    require_once 'test.php';
-//    func_not_exists("hello world");
-} catch (\Exception $exception) {
-    echo 111;
-    var_export($exception);
-} catch (\ErrorException $error) {
-    // 就是这里了，try catch 捕捉了 Error
-    echo 222;
-    var_export($error);
+register_shutdown_function('appShutdown');
+function appShutdown(){
+    $err = error_get_last();
+    var_dump($err);
+    if (empty($err)){
+        echo '输出错误';
+    }
+    echo '自定义错误';
 }
+$a = m;
+//echo 111
+////////以下显示系统级别的错误，为语法错误等
+//function my_error($errno,$errstr,$errfile,$errline,$errcontext)
+//{
+//       var_dump($errno);
+//       var_dump($errstr);
+//       var_dump($errfile);
+//       var_dump($errline);
+//       var_dump($errcontext);
+//}
+//set_error_handler("my_error",E_ALL ^ E_NOTICE);
+/**
+ * 错误
+ */
+
+//fun_not_extst();
 //$a = new fdsfds();
 //$file=fopen("aaa.txt","r+");//打开不存在的文件，会出现致命错误
 
