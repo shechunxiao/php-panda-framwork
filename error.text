@@ -1,6 +1,0 @@
-[27-Sep-2019 17:50:34 PRC] PHP Fatal error:  require_once(): Failed opening required 'D:\wamp64\www\Memory/lib.php' (include_path='.;C:\php\pear') in D:\wamp64\www\Memory\test.php on line 39
-[27-Sep-2019 17:50:34 PRC] PHP Stack trace:
-[27-Sep-2019 17:50:34 PRC] PHP   1. {main}() D:\wamp64\www\Memory\test.php:0
-[27-Sep-2019 17:50:43 PRC] PHP Fatal error:  require_once(): Failed opening required 'D:\wamp64\www\Memory/lib.php' (include_path='.;C:\php\pear') in D:\wamp64\www\Memory\test.php on line 39
-[27-Sep-2019 17:50:43 PRC] PHP Stack trace:
-[27-Sep-2019 17:50:43 PRC] PHP   1. {main}() D:\wamp64\www\Memory\test.php:0
