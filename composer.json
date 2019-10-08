@@ -17,7 +17,8 @@
             "memory\\": "vendor/memory"
         },
         "files": [
-            "app/Function/function.php"
+            "app/Function/function.php",
+            "vendor/memory/helper.php"
         ],
         "classmap": [
             "classmap"
