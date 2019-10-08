@@ -1,7 +1,12 @@
 <?php
 
 require 'bootstrap/autoload.php';
-error_reporting(0);
+//error_reporting(0);
+//实现自定义日志输出
+file_put_contents(__DIR__.'/log/error/'.date('Y-m-d').'.log','错误PHP Fatal error:  require_once(): Failed opening required \'D:\wamp64\www\Memory/lib.php\' (include_path=\'.;C:\php\pear\') in D:\wamp64\www\Memory\test.php on line 39'."\r\n",FILE_APPEND);
+//ini_set('error_log',__DIR__.'/log/error/'.date('Y-m-d').'.log');
+die();
+
 register_shutdown_function( 'appShutdown');
 set_error_handler( 'appError',E_ALL ^ E_NOTICE);
 set_exception_handler( 'appException');
@@ -52,7 +57,7 @@ function appShutdown(){
 //    var_dump($e);
 //}
 //throw new Exception('Uncaught Exception occurred');
-//$a = m;
+$a = m;
 //fdkfjklsdflksdfk();
 //$b = new sfsd();
 //require 'fdsfsd.txt';
@@ -60,4 +65,4 @@ function appShutdown(){
 //for ($i=0 ;  $i<10;$i++){
 //
 //}
-require 'tiaoshi.php';
+//require 'tiaoshi.php';

@@ -104,30 +104,30 @@ require 'bootstrap/autoload.php';
 //error_reporting('E_WARNING'); //错误报告级别，可以实现debug是否为true的开关功能.
 //echo ['name'=>1231321];
 // 不报告任何级别的错误
-error_reporting(0);
-//ini_set('display_errors', true);
-
-register_shutdown_function('appShutdown');
-function appShutdown(){
-    $err = error_get_last();
-    var_dump($err);
-    if (empty($err)){
-        echo '输出错误';
-    }
-    echo '自定义错误';
-}
-//echo 111
-////////以下显示系统级别的错误，为语法错误等
-function my_error($errno,$errstr,$errfile,$errline,$errcontext)
-{
-       var_dump($errno);
-       var_dump($errstr);
-       var_dump($errfile);
-       var_dump($errline);
-       var_dump($errcontext);
-}
-set_error_handler("my_error",E_ALL ^ E_NOTICE);
-require 'fsfdsds.text';
+//error_reporting(0);
+////ini_set('display_errors', true);
+//
+//register_shutdown_function('appShutdown');
+//function appShutdown(){
+//    $err = error_get_last();
+//    var_dump($err);
+//    if (empty($err)){
+//        echo '输出错误';
+//    }
+//    echo '自定义错误';
+//}
+////echo 111
+//////////以下显示系统级别的错误，为语法错误等
+//function my_error($errno,$errstr,$errfile,$errline,$errcontext)
+//{
+//       var_dump($errno);
+//       var_dump($errstr);
+//       var_dump($errfile);
+//       var_dump($errline);
+//       var_dump($errcontext);
+//}
+//set_error_handler("my_error",E_ALL ^ E_NOTICE);
+//require 'fsfdsds.text';
 /**
  * 错误
  */
@@ -185,7 +185,7 @@ require 'fsfdsds.text';
 //throw new Exception('fdfddfs');
 
 
-die();
+//die();
 
 //throw new \App\Http\Controller\Exception('fdsffdfdsdsds');
 //try{
@@ -208,81 +208,81 @@ die();
 //}
 
 
-die();
+//die();
+//
+//function checkNum($number)
+//{
+//    if($number==1)
+//    {
+//        throw new Exception("Value must be 1 or below");
+//    }elseif($number==2){
+//        throw new PDOException('FSDFD');
+//    }elseif ($number == 3){
+//        throw new RuntimeException('fdsfddsfd');
+//    }else{
+//        echo '默认';
+//        throw new \App\Http\Controller\Exception('自定义Exception');
+//    }
+//    return true;
+//}
+//try{
+//    checkNum(4);
+//}catch (\App\Http\Controller\Exception $e){
+//    echo $e->getMessage();
+//}
+//catch (PDOException $e){
+//    echo $e->getMessage();
+//}catch(Exception $ee){
+//    echo $ee->getMessage();
+//}catch(RuntimeException $eee){
+//    echo $eee->getMessage();
+//}
+//die();
 
-function checkNum($number)
-{
-    if($number==1)
-    {
-        throw new Exception("Value must be 1 or below");
-    }elseif($number==2){
-        throw new PDOException('FSDFD');
-    }elseif ($number == 3){
-        throw new RuntimeException('fdsfddsfd');
-    }else{
-        echo '默认';
-        throw new \App\Http\Controller\Exception('自定义Exception');
-    }
-    return true;
-}
-try{
-    checkNum(4);
-}catch (\App\Http\Controller\Exception $e){
-    echo $e->getMessage();
-}
-catch (PDOException $e){
-    echo $e->getMessage();
-}catch(Exception $ee){
-    echo $ee->getMessage();
-}catch(RuntimeException $eee){
-    echo $eee->getMessage();
-}
-die();
-
-try{
-    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
-        PDO::ATTR_PERSISTENT=>false,
-        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
-//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
-        PDO::ATTR_STRINGIFY_FETCHES => false,
-        PDO::ATTR_EMULATE_PREPARES=>false
-    ]);
-    $DB->query('select * from tefsfsdfdsfds');
-
-}catch (\App\Http\Controller\Exception $e){
-    echo 111;
-//    print_r($e->getMessage());
-//    echo '<br>';
-//    print_r($e->getCode());
-//    echo '<br>';
-//    print_r($e->getFile());
-//    echo '<br>';
-//    print_r($e->getLine());
-//    echo '<br>';
-//    print_r($e->getPrevious());
-//    echo '<br>';
-//    print_r($e->getTrace());
-//    echo '<br>';
-//    print_r($e->getTraceAsString());
-//    echo '<br>';
-//    echo '<br>';
-//    echo '<br>';
-//    echo '<br>';
-//    echo '<br>';
-//    echo '<br>';
-//    echo '<br>';
-//    echo '<br>';
-//    $ex = new \App\Http\Controller\Exception();
-//    echo $ex;
-}catch (\PDOException $e){
-//   throw  $e;
-
-}
-die();
+//try{
+//    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
+//        PDO::ATTR_PERSISTENT=>false,
+//        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
+//        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
+//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+//        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
+//        PDO::ATTR_STRINGIFY_FETCHES => false,
+//        PDO::ATTR_EMULATE_PREPARES=>false
+//    ]);
+//    $DB->query('select * from tefsfsdfdsfds');
+//
+//}catch (\App\Http\Controller\Exception $e){
+//    echo 111;
+////    print_r($e->getMessage());
+////    echo '<br>';
+////    print_r($e->getCode());
+////    echo '<br>';
+////    print_r($e->getFile());
+////    echo '<br>';
+////    print_r($e->getLine());
+////    echo '<br>';
+////    print_r($e->getPrevious());
+////    echo '<br>';
+////    print_r($e->getTrace());
+////    echo '<br>';
+////    print_r($e->getTraceAsString());
+////    echo '<br>';
+////    echo '<br>';
+////    echo '<br>';
+////    echo '<br>';
+////    echo '<br>';
+////    echo '<br>';
+////    echo '<br>';
+////    echo '<br>';
+////    $ex = new \App\Http\Controller\Exception();
+////    echo $ex;
+//}catch (\PDOException $e){
+////   throw  $e;
+//
+//}
+//die();
 
 
 /**
@@ -371,18 +371,18 @@ die();
  *
  */
 
-try {
-    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
-        PDO::ATTR_PERSISTENT=>false,
-        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
-//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
-        PDO::ATTR_STRINGIFY_FETCHES => false,
-        PDO::ATTR_EMULATE_PREPARES=>false
-    ]);
+//try {
+//    $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=shechunxiao;charset=UTF8;','root','', [
+//        PDO::ATTR_PERSISTENT=>false,
+//        PDO::ATTR_CASE=>PDO::CASE_NATURAL,
+//        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //关联数组
+////        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,  //对象
+//        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+//        PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING,
+//        PDO::ATTR_STRINGIFY_FETCHES => false,
+//        PDO::ATTR_EMULATE_PREPARES=>false
+//    ]);
     //聚合函数有，count(),max,min,avg,sum
 //    $res = $DB->query('select a.*,b.*,c.*,b.id as bid,c.id as cid from first a inner join first_extend b on a.id=b.first_id  join first_two c on a.id=c.first_id');
 //    var_dump($res->fetchAll());
@@ -471,8 +471,8 @@ try {
 //    echo '返回结果集中的列数:'.$result->columnCount().'<br>';
 
 
-} catch (PDOException $e) {
-
-    print "Error44!: " . $e->getMessage() . "<br/>";
-    die();
-}
+//} catch (PDOException $e) {
+//
+//    print "Error44!: " . $e->getMessage() . "<br/>";
+//    die();
+//}
