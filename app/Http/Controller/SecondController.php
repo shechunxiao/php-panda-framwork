@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controller;
+use http\Env\Request;
+
 class SecondController
 {
     use FirstTrait;
@@ -8,13 +10,18 @@ class SecondController
     public $b;
     const c = 3;
     const d = 4;
-    public function __construct(...$data)
+//    public function __construct(...$data)
+//    {
+//        echo 'data........';
+//        var_dump($data);
+//        echo 'data........';
+//        $this->a = $data[0];
+//        $this->b = $data[1];
+//    }
+
+    public function __construct($m=22,$n=33,FirstController $first)
     {
-        echo 'data........';
-        var_dump($data);
-        echo 'data........';
-        $this->a = $data[0];
-        $this->b = $data[1];
+        echo 'construct初始化';
     }
 
     /**

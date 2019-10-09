@@ -35,11 +35,11 @@ var_dump($reflection->isSubclassOf(\App\Http\Controller\FirstController::class))
 var_dump($reflection->__toString());
 //$without = $reflection->newInstanceWithoutConstructor(); //实例化一个类，并且不调用它的构造函数
 //$without->index();
-if ($reflection->isInstantiable()){
-    $instance = $reflection->newInstance(1,2);
-}
-var_dump($instance);
-$instance->index();
+//if ($reflection->isInstantiable()){
+//    $instance = $reflection->newInstance(1,2);
+//}
+//var_dump($instance);
+//$instance->index();
 //方法反射
 $methodReflection = $reflection->getMethod('test');
 var_dump($methodReflection->getModifiers());
@@ -52,5 +52,16 @@ var_dump($methodReflection->isStatic());
 var_dump($methodReflection->isDestructor());
 var_dump($methodReflection->isConstructor());
 var_dump($methodReflection->isClosure());
-$methodReflection->invoke();
+//$methodReflection->invoke();
+echo '******************************* Params ****************************************';
+$construct = $reflection->getConstructor();
+$params = $construct->getParameters();
+//var_dump($construct);
+//var_dump($params);
+foreach ($params as $param){
+    var_dump($param->getClass());
+    var_dump($param->getClass()->name);
+}
+
+
 
