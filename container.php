@@ -63,6 +63,10 @@ require 'bootstrap/autoload.php';
 //var_dump($alias->make('string'));
 //var_dump($alias->make('content'));
 
+/**
+ * 扩展绑定测试
+ */
+
 
 
 
