@@ -66,9 +66,30 @@ require 'bootstrap/autoload.php';
 /**
  * 扩展绑定测试
  */
+//$extend = new \App\Http\Controller\ExtendContainer();
+////单例实例化，也就是说只实例化一次
+//$extend->singleton(\App\Http\Controller\Redis::class,function(){
+//    return new \App\Http\Controller\Redis();
+//});
+//$extend->extend(\App\Http\Controller\Redis::class,function(\App\Http\Controller\Redis $redis){
+//    $redis->setName('扩展器');
+//    return $redis;
+//});
+//$redis = $extend->make(\App\Http\Controller\Redis::class);
+//var_dump($redis);
+//var_dump(\App\Http\Controller\Redis::class);
 
+/**
+ * 上下文绑定测试
+ */
 
-
+//$context = new \App\Http\Controller\ContextContainer();
+//$context->when(\App\Http\Controller\Dog::class)->needs('name')->give('小狗');
+//$context->when(\App\Http\Controller\Cat::class)->needs('name')->give('小猫');
+//$dog = $context->make(\App\Http\Controller\Dog::class);
+//$cat = $context->make(\App\Http\Controller\Cat::class);
+//var_dump('Dog-'.$dog->name);
+//var_dump('Cat-'.$cat->name);
 
 
 

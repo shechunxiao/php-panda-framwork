@@ -2,6 +2,9 @@
 namespace App\Http\Controller;
 class ExtendContainer extends AliasContainer{
 
+    /**
+     * 扩展器的作用是将绑定的服务容器的情况进行扩展
+     */
     //存放扩展器的数组
     protected $extenders = [];
     //给服务绑定扩展器
