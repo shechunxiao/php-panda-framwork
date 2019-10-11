@@ -10,7 +10,7 @@ require 'bootstrap/autoload.php';
 //var_dump($second);
 
 /**
- * 第二部分测试
+ * 按需实例化测试
  */
 //$defer = new \App\Http\Controller\DeferContainer();
 //$defer->bind('second',function(){

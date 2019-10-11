@@ -7,7 +7,7 @@ use Closure;
 class SingletonContainer extends DeferContainer
 {
 
-    //绑定服务
+    //绑定服务,并且实现了按需实例化
     public function bind($name, $instance = [], $shared = false)
     {
         if ($instance instanceof Closure){
