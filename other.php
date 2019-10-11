@@ -21,3 +21,5 @@ require 'bootstrap/autoload.php';
 //var_dump($first);
 //var_dump($second);
 //var_dump($three);
+
+//管道模式
