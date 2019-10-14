@@ -8,6 +8,16 @@ use think\exception\PDOException;
 use function Composer\Autoload\includeFile;
 
 require 'bootstrap/autoload.php';
+
+
+$pathInfo = $_SERVER['PATH_INFO'];
+$pathInfo = explode('/',$pathInfo);
+$age = new \App\Http\Controller\Age();
+$age->time();
+
+
+
+
 //echo date('Y-m-d H:i:s');
 
 //$a = include __DIR__.'/config/app.php';

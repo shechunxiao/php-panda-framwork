@@ -1,6 +1,8 @@
 <?php
 
 require 'bootstrap/autoload.php';
+
+var_dump($_SERVER);die();
 //error_reporting(0);
 //实现自定义日志输出
 file_put_contents(__DIR__.'/log/error/'.date('Y-m-d').'.log','错误PHP Fatal error:  require_once(): Failed opening required \'D:\wamp64\www\Memory/lib.php\' (include_path=\'.;C:\php\pear\') in D:\wamp64\www\Memory\test.php on line 39'."\r\n",FILE_APPEND);
