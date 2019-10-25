@@ -60,7 +60,10 @@ class ComposerStaticInit953ed3ca1e4b92619cb4d695ff5218da
     );
 
     public static $classMap = array (
+        'App\\Http\\Controller\\Exception' => __DIR__ . '/../..' . '/app/Http/Controller/Exception.php',
         'App\\Http\\Controller\\FirstController' => __DIR__ . '/../..' . '/app/Http/Controller/FirstController.php',
+        'App\\Http\\Controller\\MyPdo' => __DIR__ . '/../..' . '/app/Http/Controller/MyPdo.php',
+        'App\\Http\\Controller\\PdoException' => __DIR__ . '/../..' . '/app/Http/Controller/PdoException.php',
         'Dotenv\\Dotenv' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Dotenv.php',
         'Dotenv\\Environment\\AbstractVariables' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Environment/AbstractVariables.php',
         'Dotenv\\Environment\\Adapter\\AdapterInterface' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Environment/Adapter/AdapterInterface.php',
@@ -90,7 +93,7 @@ class ComposerStaticInit953ed3ca1e4b92619cb4d695ff5218da
         'PhpOption\\Option' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/Option.php',
         'PhpOption\\Some' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/Some.php',
         'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
-        'Test' => __DIR__ . '/../..' . '/classmap/Test.php',
+        'memory\\Database\\Builder\\Db' => __DIR__ . '/..' . '/memory/Database/Builder/Db.php',
         'memory\\Facades\\Db' => __DIR__ . '/..' . '/memory/Facades/Db.php',
     );
 

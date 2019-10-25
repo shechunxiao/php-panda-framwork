@@ -6,7 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Http\\Controller\\Exception' => $baseDir . '/app/Http/Controller/Exception.php',
     'App\\Http\\Controller\\FirstController' => $baseDir . '/app/Http/Controller/FirstController.php',
+    'App\\Http\\Controller\\MyPdo' => $baseDir . '/app/Http/Controller/MyPdo.php',
+    'App\\Http\\Controller\\PdoException' => $baseDir . '/app/Http/Controller/PdoException.php',
     'Dotenv\\Dotenv' => $vendorDir . '/vlucas/phpdotenv/src/Dotenv.php',
     'Dotenv\\Environment\\AbstractVariables' => $vendorDir . '/vlucas/phpdotenv/src/Environment/AbstractVariables.php',
     'Dotenv\\Environment\\Adapter\\AdapterInterface' => $vendorDir . '/vlucas/phpdotenv/src/Environment/Adapter/AdapterInterface.php',
@@ -36,6 +39,6 @@ return array(
     'PhpOption\\Option' => $vendorDir . '/phpoption/phpoption/src/PhpOption/Option.php',
     'PhpOption\\Some' => $vendorDir . '/phpoption/phpoption/src/PhpOption/Some.php',
     'Symfony\\Polyfill\\Ctype\\Ctype' => $vendorDir . '/symfony/polyfill-ctype/Ctype.php',
-    'Test' => $baseDir . '/classmap/Test.php',
+    'memory\\Database\\Builder\\Db' => $vendorDir . '/memory/Database/Builder/Db.php',
     'memory\\Facades\\Db' => $vendorDir . '/memory/Facades/Db.php',
 );
