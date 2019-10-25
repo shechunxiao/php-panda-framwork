@@ -1,4 +1,7 @@
 <?php
 
 //Composer自动加载
-require __DIR__.'/../bootstrap/autoload.php';
+$dirname = dirname(__DIR__);
+
+require $dirname.'/bootstrap/autoload.php';
+test();

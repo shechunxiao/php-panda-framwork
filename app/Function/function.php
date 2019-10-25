@@ -1,4 +1,7 @@
 <?php
-function show(){
-    echo 'show';
+
+if (!function_exists('show')){
+    function show(){
+        echo 'show';
+    }
 }

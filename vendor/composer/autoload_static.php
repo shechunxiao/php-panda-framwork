@@ -9,13 +9,10 @@ class ComposerStaticInit953ed3ca1e4b92619cb4d695ff5218da
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '5bed4dc55e02c373bc675a745c8fa3dc' => __DIR__ . '/../..' . '/app/Function/function.php',
+        '213ff1bd62e7f14c5bd3b571b4e51cf7' => __DIR__ . '/..' . '/memory/test/helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'm' => 
-        array (
-            'memory\\' => 7,
-        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Ctype\\' => 23,
@@ -31,10 +28,6 @@ class ComposerStaticInit953ed3ca1e4b92619cb4d695ff5218da
     );
 
     public static $prefixDirsPsr4 = array (
-        'memory\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/memory',
-        ),
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
@@ -93,8 +86,6 @@ class ComposerStaticInit953ed3ca1e4b92619cb4d695ff5218da
         'PhpOption\\Option' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/Option.php',
         'PhpOption\\Some' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/Some.php',
         'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
-        'memory\\Database\\Builder\\Db' => __DIR__ . '/..' . '/memory/Database/Builder/Db.php',
-        'memory\\Facades\\Db' => __DIR__ . '/..' . '/memory/Facades/Db.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

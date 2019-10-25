@@ -39,6 +39,4 @@ return array(
     'PhpOption\\Option' => $vendorDir . '/phpoption/phpoption/src/PhpOption/Option.php',
     'PhpOption\\Some' => $vendorDir . '/phpoption/phpoption/src/PhpOption/Some.php',
     'Symfony\\Polyfill\\Ctype\\Ctype' => $vendorDir . '/symfony/polyfill-ctype/Ctype.php',
-    'memory\\Database\\Builder\\Db' => $vendorDir . '/memory/Database/Builder/Db.php',
-    'memory\\Facades\\Db' => $vendorDir . '/memory/Facades/Db.php',
 );
