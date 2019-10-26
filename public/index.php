@@ -4,3 +4,4 @@
  */
 require dirname(__DIR__) . '/bootstrap/autoload.php';
 
+$app = new \Panda\foundation\Application(dirname(__DIR__));
