@@ -7,6 +7,11 @@ use Dotenv\Environment\DotenvFactory;
 
 class TestController implements Demo
 {
+    public $first;
+    public function __construct(FirstController $firstController,$b=4)
+    {
+        $this->first = $firstController;
+    }
 
     public function index()
     {

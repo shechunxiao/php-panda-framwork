@@ -12,4 +12,5 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
 //$get = $app->getInstance(\App\Controller\TestController::class);
 //var_dump($get);
 
-$app->instanceByReflection(\App\Controller\TestController::class);
+$instance = $app->instanceByReflection(\App\Controller\TestController::class);
+var_dump($instance);

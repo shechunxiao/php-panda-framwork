@@ -81,7 +81,7 @@ class Container
             $instance = call_user_func($concrete['concrete']);
             $this->instances[$abstract] = $instance;
         } else {
-            $instance = $this->instanceByReflection($concrete);
+            $instance = $this->instanceByReflection($abstract);
         }
         return $instance;
     }
@@ -112,11 +112,45 @@ class Container
     /**
      * 通过反射实例化类
      */
-    public function instanceByReflection($concrete)
+    public function instanceByReflection($concrete,$parameters = [])
     {
         $reflection = new \ReflectionClass($concrete);
-        var_dump($reflection);
-//        return $this;
+        $getConstructor = $reflection->getConstructor();
+        if (is_null($getConstructor)){
+            return new $concrete();
+        }
+        $params = $getConstructor->getParameters();
+        $dependencies = []; //需要实例化的依赖项
+        foreach ($params as $param){
+            if (isset($parameters[$param->getName()])){
+                $dependencies[] = $param;
+                continue;
+            }
+            if (is_null($param->getClass())){
+                if ($param->isDefaultValueAvailable()){
+                    $dependencies[] = $param->getDefaultValue();
+                }else{
+                    echo '缺少参数';die();
+                }
+            }else{
+                $dependencies[] = $param;
+            }
+        }
+//        $resolvedInArgs = $this->resolveArgs($dependencies);
+//        return $reflection->newInstanceArgs($resolvedInArgs);
+    }
+
+    /**
+     * 解析构造函数依赖项(如果是类就实例化，如果是接口就实例化具体实现)(make中实例化)
+     * @param $params
+     * @return array
+     */
+    public function resolveArgs($params){
+        $result = [];
+        foreach ($params as $key=>$param){
+            $result[] = $this->instanceByClosure($param->getClass()->name);
+        }
+        return $result;
     }
 
     /**
