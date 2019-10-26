@@ -12,5 +12,29 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
 //$get = $app->getInstance(\App\Controller\TestController::class);
 //var_dump($get);
 
-$instance = $app->instanceByReflection(\App\Controller\TestController::class);
-var_dump($instance);
+//$instance = $app->instanceByReflection(\App\Controller\TestController::class);
+//var_dump($instance);
+
+//$app->bind(\App\Controller\FirstController::class);
+//$first = $app->instance(\App\Controller\FirstController::class);
+//var_dump($first);
+
+//$app->bind(\App\Controller\Demo::class,\App\Controller\DemoController::class);
+//
+//$demo = $app->instance(\App\Controller\Demo::class);
+//var_dump($demo);
+//$demo->index();
+
+//$app->bind(\App\Controller\FirstController::class);
+//
+//$first = $app->instance(\App\Controller\FirstController::class);
+//var_dump($first);
+//$first->index();
+
+$app->bind(\App\Controller\Demo::class,function(){
+    return new \App\Controller\DemoController();
+});
+
+$first = $app->instance(\App\Controller\Demo::class);
+var_dump($first);
+$first->index();

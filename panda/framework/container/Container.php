@@ -34,6 +34,11 @@ class Container
      */
     protected $binds = [];
     /**
+     * 单例数组
+     * @var array
+     */
+    protected $isSingles = [];
+    /**
      * 服务的别名数组
      * @var array
      */
@@ -54,21 +59,42 @@ class Container
      */
     public function bind($abstract, $concrete = null, $isSingle = false)
     {
+        if (is_null($concrete)) {
+            $concrete = $abstract;
+        }
+        if ($isSingle){
+            $this->isSingles[$abstract] = true;
+        }
         //删除原来的实例化
         $this->clearInstance($abstract);
         if ($concrete instanceof Closure) {
-            $this->closures[$abstract]['concrete'] = $concrete;
-            $this->closures[$abstract]['isSingle'] = $isSingle;
+            $this->closures[$abstract] = $concrete;
+        }else{
+            $this->binds[$abstract] = $concrete;
         }
-        $this->binds[] = $abstract;
+        //如果某个类已经实例化过了，那么就重新执行绑定
+        if (isset($this->instances[$abstract])) {
+            $this->resolve($abstract);
+        }
+        return $this;
     }
+
+    /**
+     * 重新实例化
+     * @param $abstract
+     */
+    public function resolve($abstract)
+    {
+        $this->instanceByClosure($abstract);
+    }
+
 
     /**
      * 通过绑定的回调函数实例化类
      */
     public function instanceByClosure($abstract)
     {
-        //判断是否重建，单例的话不用重建
+        //判断是否重新实例化，单例的话不用重新实例化
         $isNewInstance = $this->isNewInstance($abstract);
         //如果这个抽象的实例存在，则直接返回
         if (isset($this->instances[$abstract]) && !$isNewInstance) {
@@ -77,11 +103,11 @@ class Container
         //获取抽象实例
         $concrete = $this->getConcrete($abstract);
         //实例化
-        if ($concrete && $concrete['concrete'] instanceof Closure) {
-            $instance = call_user_func($concrete['concrete']);
+        if ($concrete instanceof Closure) {
+            $instance = call_user_func($concrete);
             $this->instances[$abstract] = $instance;
         } else {
-            $instance = $this->instanceByReflection($abstract);
+            $instance = $this->instanceByReflection($concrete);
         }
         return $instance;
     }
@@ -91,7 +117,7 @@ class Container
      */
     public function isNewInstance($abstract)
     {
-        if (isset($this->binds[$abstract]) && $this->binds[$abstract]['isSingle']) {
+        if (isset($this->isSingles[$abstract])){
             return false;
         }
         return true;
@@ -107,37 +133,41 @@ class Container
         if (isset($this->binds[$abstract])) {
             return $this->binds[$abstract];
         }
+        if (isset($this->closures[$abstract])){
+            return $this->closures[$abstract];
+        }
     }
 
     /**
      * 通过反射实例化类
      */
-    public function instanceByReflection($concrete,$parameters = [])
+    public function instanceByReflection($concrete, $parameters = [])
     {
         $reflection = new \ReflectionClass($concrete);
         $getConstructor = $reflection->getConstructor();
-        if (is_null($getConstructor)){
+        if (is_null($getConstructor)) {
             return new $concrete();
         }
         $params = $getConstructor->getParameters();
         $dependencies = []; //需要实例化的依赖项
-        foreach ($params as $param){
-            if (isset($parameters[$param->getName()])){
+        foreach ($params as $param) {
+            if (isset($parameters[$param->getName()])) {
                 $dependencies[] = $param;
                 continue;
             }
-            if (is_null($param->getClass())){
-                if ($param->isDefaultValueAvailable()){
+            if (is_null($param->getClass())) {
+                if ($param->isDefaultValueAvailable()) {
                     $dependencies[] = $param->getDefaultValue();
-                }else{
-                    echo '缺少参数';die();
+                } else {
+                    echo '缺少参数';
+                    die();
                 }
-            }else{
+            } else {
                 $dependencies[] = $param;
             }
         }
-//        $resolvedInArgs = $this->resolveArgs($dependencies);
-//        return $reflection->newInstanceArgs($resolvedInArgs);
+        $resolvedInArgs = $this->resolveArgs($dependencies);
+        return $reflection->newInstanceArgs($resolvedInArgs);
     }
 
     /**
@@ -145,10 +175,13 @@ class Container
      * @param $params
      * @return array
      */
-    public function resolveArgs($params){
+    public function resolveArgs($params)
+    {
         $result = [];
-        foreach ($params as $key=>$param){
-            $result[] = $this->instanceByClosure($param->getClass()->name);
+        foreach ($params as $param) {
+            if (is_object($param)) {
+                $result[] = $this->instanceByClosure($param->getClass()->name);
+            }
         }
         return $result;
     }
@@ -161,13 +194,6 @@ class Container
         $this->bind($abstract, $concrete, $isSing);
     }
 
-    /**
-     * 绑定回调函数到回调数组
-     */
-    public function bindToClosures()
-    {
-
-    }
 
     /**
      * 给服务绑定一个别名
@@ -181,9 +207,14 @@ class Container
     /**
      * 给服务绑定一个扩展器
      */
-    public function extenders()
+    public function extenders($abstract, Closure $closure)
     {
-
+        if (isset($this->extenders[$abstract])) {
+            $this->instances[$abstract] = $closure($this->instances[$abstract], $this);
+        } else {
+            $this->extenders[$abstract][] = $closure;
+        }
+        return $this;
     }
 
     /**

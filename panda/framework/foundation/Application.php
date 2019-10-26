@@ -19,7 +19,7 @@ class Application extends Container
      * 绑定回调函数到回调数组
      */
     public function bind($abstract,$concrete = null,$isSingle = false){
-        parent::bind($abstract,$concrete,$isSingle);
+        return parent::bind($abstract,$concrete,$isSingle);
     }
 
     /**
