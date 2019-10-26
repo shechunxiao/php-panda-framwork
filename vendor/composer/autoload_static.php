@@ -6,9 +6,38 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit37ce11f5891d6875824953c120e700e7
 {
+    public static $files = array (
+        'aa0ae1c6141dc73052b641c7e37b17d9' => __DIR__ . '/../..' . '/app/Function/function.php',
+        '2bcbb3997d73d7c79e565277cbe2636e' => __DIR__ . '/../..' . '/panda/framework/helper.php',
+    );
+
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Panda\\' => 6,
+        ),
+        'A' => 
+        array (
+            'App\\' => 4,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Panda\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/panda/framework',
+        ),
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app',
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit37ce11f5891d6875824953c120e700e7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit37ce11f5891d6875824953c120e700e7::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }
