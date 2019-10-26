@@ -1,0 +1,7 @@
+{
+    "name": "memory/memory",
+    "description": "a framework for PHP",
+    "keywords": ["framework", "memory"],
+    "license": "MIT",
+    "type": "project"
+}
