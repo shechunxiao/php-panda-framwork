@@ -7,14 +7,23 @@ namespace Composer\Autoload;
 class ComposerStaticInit37ce11f5891d6875824953c120e700e7
 {
     public static $files = array (
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'aa0ae1c6141dc73052b641c7e37b17d9' => __DIR__ . '/../..' . '/app/Function/function.php',
         '2bcbb3997d73d7c79e565277cbe2636e' => __DIR__ . '/../..' . '/panda/framework/helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Ctype\\' => 23,
+        ),
         'P' => 
         array (
             'Panda\\' => 6,
+        ),
+        'D' => 
+        array (
+            'Dotenv\\' => 7,
         ),
         'A' => 
         array (
@@ -23,13 +32,31 @@ class ComposerStaticInit37ce11f5891d6875824953c120e700e7
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
         'Panda\\' => 
         array (
             0 => __DIR__ . '/../..' . '/panda/framework',
         ),
+        'Dotenv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'PhpOption\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpoption/phpoption/src',
+            ),
         ),
     );
 
@@ -38,6 +65,7 @@ class ComposerStaticInit37ce11f5891d6875824953c120e700e7
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit37ce11f5891d6875824953c120e700e7::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit37ce11f5891d6875824953c120e700e7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit37ce11f5891d6875824953c120e700e7::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }
