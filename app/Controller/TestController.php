@@ -5,7 +5,7 @@ use Dotenv\Dotenv;
 use Dotenv\Environment\Adapter\EnvConstAdapter;
 use Dotenv\Environment\DotenvFactory;
 
-class TestController
+class TestController implements Demo
 {
 
     public function index()
