@@ -31,10 +31,21 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
 //var_dump($first);
 //$first->index();
 
-$app->bind(\App\Controller\Demo::class,function(){
-    return new \App\Controller\DemoController();
-});
+//$app->bind(\App\Controller\Demo::class,function(){
+//    return new \App\Controller\DemoController();
+//});
+//
+//$first = $app->instance(\App\Controller\Demo::class);
+//var_dump($first);
+//$first->index();
 
-$first = $app->instance(\App\Controller\Demo::class);
-var_dump($first);
-$first->index();
+$app->bind(\App\Controller\DemoFirst::class);
+$app->bind(\App\Controller\DemoSecond::class);
+$app->bind(\App\Controller\DemoOne::class);
+$app->bind(\App\Controller\DemoTwo::class);
+$app->contexts(\App\Controller\DemoFirst::class,\App\Controller\Demo::class,\App\Controller\DemoOne::class);
+$app->contexts(\App\Controller\DemoSecond::class,\App\Controller\Demo::class,\App\Controller\DemoTwo::class);
+var_dump($app);
+$demofirst = $app->instance(\App\Controller\DemoSecond::class);
+var_dump($demofirst);
+$demofirst->demo();

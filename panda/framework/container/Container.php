@@ -39,6 +39,11 @@ class Container
      */
     protected $isSingles = [];
     /**
+     * 正在实例化的类
+     * @var array
+     */
+    protected $isInstancing = [];
+    /**
      * 服务的别名数组
      * @var array
      */
@@ -66,7 +71,7 @@ class Container
             $this->isSingles[$abstract] = true;
         }
         //删除原来的实例化
-        $this->clearInstance($abstract);
+//        $this->clearInstance($abstract);
         if ($concrete instanceof Closure) {
             $this->closures[$abstract] = $concrete;
         }else{
@@ -96,6 +101,8 @@ class Container
     {
         //判断是否重新实例化，单例的话不用重新实例化
         $isNewInstance = $this->isNewInstance($abstract);
+        //判断是否有上下文绑定
+        $isHasContext = $this->isHasContext($abstract);
         //如果这个抽象的实例存在，则直接返回
         if (isset($this->instances[$abstract]) && !$isNewInstance) {
             return $this->instances[$abstract];
@@ -124,12 +131,26 @@ class Container
     }
 
     /**
+     * 判断是否有上下文绑定
+     */
+    public function isHasContext($abstract){
+        if(isset($this->contexts[$abstract])){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 获取抽象实现回调函数
      * @param $abstract
      * @return mixed
      */
     public function getConcrete($abstract)
     {
+        $isInstancing = end($this->isInstancing);
+        if ($isInstancing != false){
+            return $this->contexts[$isInstancing][$abstract];
+        }
         if (isset($this->binds[$abstract])) {
             return $this->binds[$abstract];
         }
@@ -148,6 +169,7 @@ class Container
         if (is_null($getConstructor)) {
             return new $concrete();
         }
+        $this->isInstancing[] = $concrete;
         $params = $getConstructor->getParameters();
         $dependencies = []; //需要实例化的依赖项
         foreach ($params as $param) {
@@ -219,10 +241,15 @@ class Container
 
     /**
      * 给服务绑定上下文绑定
+     * @param $when
+     * @param $need
+     * @param $concrete
+     * @return $this
      */
-    public function contexts()
+    public function contexts($when,$abstract,$concrete)
     {
-
+        $this->contexts[$when][$abstract] = $concrete;
+        return $this;
     }
 
     /**
