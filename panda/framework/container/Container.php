@@ -67,14 +67,14 @@ class Container
         if (is_null($concrete)) {
             $concrete = $abstract;
         }
-        if ($isSingle){
+        if ($isSingle) {
             $this->isSingles[$abstract] = true;
         }
         //删除原来的实例化
 //        $this->clearInstance($abstract);
         if ($concrete instanceof Closure) {
             $this->closures[$abstract] = $concrete;
-        }else{
+        } else {
             $this->binds[$abstract] = $concrete;
         }
         //如果某个类已经实例化过了，那么就重新执行绑定
@@ -102,9 +102,9 @@ class Container
         //判断是否重新实例化，单例的话不用重新实例化
         $isNewInstance = $this->isNewInstance($abstract);
         //判断是否有上下文绑定
-        $isHasContext = $this->isHasContext($abstract);
+        $isNeedContext = $this->isNeedContext($abstract);
         //如果这个抽象的实例存在，则直接返回
-        if (isset($this->instances[$abstract]) && !$isNewInstance) {
+        if (isset($this->instances[$abstract]) && !$isNewInstance && !$isNeedContext) {
             return $this->instances[$abstract];
         }
         //获取抽象实例
@@ -124,20 +124,22 @@ class Container
      */
     public function isNewInstance($abstract)
     {
-        if (isset($this->isSingles[$abstract])){
+        if (isset($this->isSingles[$abstract])) {
             return false;
         }
         return true;
     }
 
     /**
-     * 判断是否有上下文绑定
+     * 判断是否需要上下文,如果有则返回上下文
      */
-    public function isHasContext($abstract){
-        if(isset($this->contexts[$abstract])){
-            return true;
+    public function isNeedContext($abstract){
+        $isInstancing = end($this->isInstancing);
+        if ($isInstancing && isset($this->contexts[$isInstancing])){
+            if ($this->contexts[$isInstancing][$abstract]){
+                return $this->contexts[$isInstancing][$abstract];
+            }
         }
-        return false;
     }
 
     /**
@@ -147,16 +149,15 @@ class Container
      */
     public function getConcrete($abstract)
     {
-        $isInstancing = end($this->isInstancing);
-        if ($isInstancing != false){
-            return $this->contexts[$isInstancing][$abstract];
+        if (!($concrete = $this->isNeedContext($abstract))){
+            if (isset($this->binds[$abstract])) {
+                $concrete = $this->binds[$abstract];
+            }
+            if (isset($this->closures[$abstract])) {
+                $concrete =  $this->closures[$abstract];
+            }
         }
-        if (isset($this->binds[$abstract])) {
-            return $this->binds[$abstract];
-        }
-        if (isset($this->closures[$abstract])){
-            return $this->closures[$abstract];
-        }
+        return $concrete;
     }
 
     /**
@@ -165,11 +166,15 @@ class Container
     public function instanceByReflection($concrete, $parameters = [])
     {
         $reflection = new \ReflectionClass($concrete);
+
+        //正在实例化的类，用于上下文绑定
+        $this->isInstancing[] = $concrete;
+        //获取构造函数
         $getConstructor = $reflection->getConstructor();
         if (is_null($getConstructor)) {
+            array_pop($this->isInstancing);
             return new $concrete();
         }
-        $this->isInstancing[] = $concrete;
         $params = $getConstructor->getParameters();
         $dependencies = []; //需要实例化的依赖项
         foreach ($params as $param) {
@@ -246,7 +251,7 @@ class Container
      * @param $concrete
      * @return $this
      */
-    public function contexts($when,$abstract,$concrete)
+    public function contexts($when, $abstract, $concrete)
     {
         $this->contexts[$when][$abstract] = $concrete;
         return $this;

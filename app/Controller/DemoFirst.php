@@ -18,4 +18,7 @@ class DemoFirst
     public function demo(){
         $this->demo->index();
     }
+    public function getDemo(){
+        return $this->demo;
+    }
 }
