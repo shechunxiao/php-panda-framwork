@@ -70,14 +70,13 @@ class Container
         if ($isSingle) {
             $this->isSingles[$abstract] = true;
         }
-        //删除原来的实例化
-//        $this->clearInstance($abstract);
+
         if ($concrete instanceof Closure) {
             $this->closures[$abstract] = $concrete;
         } else {
             $this->binds[$abstract] = $concrete;
         }
-        //如果某个类已经实例化过了，那么就重新执行绑定
+        //如果某个类已经实例化过了，那么就重新执行解析
         if (isset($this->instances[$abstract])) {
             $this->resolve($abstract);
         }
@@ -97,7 +96,7 @@ class Container
     /**
      * 通过绑定的回调函数实例化类
      */
-    public function instanceByClosure($abstract)
+    public function instanceByClosure($abstract,$par=[])
     {
         //判断是否重新实例化，单例的话不用重新实例化
         $isNewInstance = $this->isNewInstance($abstract);
@@ -109,13 +108,15 @@ class Container
         }
         //获取抽象实例
         $concrete = $this->getConcrete($abstract);
-        //实例化
-        if ($concrete instanceof Closure) {
-            $instance = call_user_func($concrete);
-            $this->instances[$abstract] = $instance;
+        //实例化,如果这个回调函数也有参数呢,所以需要解析
+        if ($concrete && $concrete instanceof Closure) {
+            $instance = $this->instanceResolveClosure($concrete,$par);
         } else {
             $instance = $this->instanceByReflection($concrete);
         }
+        //将实例化类存放到数组
+        $this->instances[$abstract] = $instance;
+
         return $instance;
     }
 
@@ -133,10 +134,11 @@ class Container
     /**
      * 判断是否需要上下文,如果有则返回上下文
      */
-    public function isNeedContext($abstract){
+    public function isNeedContext($abstract)
+    {
         $isInstancing = end($this->isInstancing);
-        if ($isInstancing && isset($this->contexts[$isInstancing])){
-            if ($this->contexts[$isInstancing][$abstract]){
+        if ($isInstancing && isset($this->contexts[$isInstancing])) {
+            if ($this->contexts[$isInstancing][$abstract]) {
                 return $this->contexts[$isInstancing][$abstract];
             }
         }
@@ -149,15 +151,40 @@ class Container
      */
     public function getConcrete($abstract)
     {
-        if (!($concrete = $this->isNeedContext($abstract))){
+        if (!($concrete = $this->isNeedContext($abstract))) {
             if (isset($this->binds[$abstract])) {
                 $concrete = $this->binds[$abstract];
             }
             if (isset($this->closures[$abstract])) {
-                $concrete =  $this->closures[$abstract];
+                $concrete = $this->closures[$abstract];
             }
         }
         return $concrete;
+    }
+
+    /**
+     * 解析回调函数
+     */
+    public function instanceResolveClosure($concrete,$par){
+        $reflection = new \ReflectionFunction($concrete);
+        $dependencies = [];
+        foreach ($reflection->getParameters() as $param) {
+            if (isset($par[$param->getName()])) {
+                $dependencies[] = $par[$param->getName()];
+                continue;
+            }
+            if (is_null($param->getClass())) {
+                if ($param->isDefaultValueAvailable()) {
+                    $dependencies[] = $param->getDefaultValue();
+                } else {
+                    echo '缺少参数';
+                    die();
+                }
+            } else {
+                $dependencies[] = $this->resolveArg($param);
+            }
+        }
+        return $concrete(...$dependencies);
     }
 
     /**
@@ -214,6 +241,16 @@ class Container
     }
 
     /**
+     * 解析单个参数
+     */
+    public function resolveArg($param){
+        if (is_object($param)) {
+            return $this->instanceByClosure($param->getClass()->name);
+        }
+        echo '单个参数解析错误';die();
+    }
+
+    /**
      * 实例化一次(单例),放在绑定中，绑定的时候就指明实例化一次
      */
     public function single($abstract, $concrete = null, $isSing = true)
@@ -257,15 +294,6 @@ class Container
         return $this;
     }
 
-    /**
-     * 清除原来的实例化
-     */
-    public function clearInstance($abstract)
-    {
-        if (isset($this->instances[$abstract])) {
-            unset($this->instances[$abstract]);
-        }
-    }
 
     /**
      * 获取实例化的类

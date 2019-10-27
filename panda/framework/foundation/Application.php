@@ -26,7 +26,7 @@ class Application extends Container
      * 实例化类
      */
     public function instance($abstract){
-        return $this->instanceByClosure($abstract);
+        return $this->instanceByClosure($abstract,['a'=>1,'b'=>2,'c'=>3]);
     }
 
 
