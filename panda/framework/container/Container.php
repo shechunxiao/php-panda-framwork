@@ -146,10 +146,11 @@ class Container
                 return $this->contexts[$isInstancing][$abstract];
             }
         }
+        return false;
     }
 
     /**
-     * 判断是否有实例化
+     * 获取抽象类的实例化
      */
     public function getInstance($abstract){
         if (isset($this->instances[$abstract])){
@@ -159,7 +160,7 @@ class Container
     }
 
     /**
-     * 获取别名
+     * 获取真实的抽象名
      * @param $abstract
      * @return mixed|null
      */
