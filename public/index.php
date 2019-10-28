@@ -67,3 +67,20 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
 ////$instance = $app->instance(\App\Controller\Demo::class,['a'=>1,'b'=>2,'c'=>3]);
 //$instance = $app->instance('ali',['a'=>1,'b'=>2,'c'=>3]);
 //var_dump($instance);
+
+
+//$factory = new Dotenv\Environment\DotenvFactory([
+//    new Dotenv\Environment\Adapter\EnvConstAdapter()
+//]);
+//$dotenv = Dotenv\Dotenv::create(dirname(__DIR__), null, $factory);
+//$dotenv->load();
+//
+//$a = getenv('DB_DATABASE');
+//var_dump($a);
+//var_dump($_ENV);
+
+//$dotenv = Dotenv\Dotenv::create(dirname(__DIR__));
+//$dotenv->load();
+//var_dump(getenv('DB_DATABASE'));
+//var_dump($_ENV);
+

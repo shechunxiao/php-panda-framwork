@@ -1,31 +1,38 @@
 <?php
 
 namespace Panda\common;
+
 use Dotenv\Dotenv;
 use Dotenv\Environment\Adapter\EnvConstAdapter;
 use Dotenv\Environment\DotenvFactory;
+use Panda\container\Container;
 
 class Env
 {
 
-//$factory = new Dotenv\Environment\DotenvFactory([
-//new Dotenv\Environment\Adapter\EnvConstAdapter()
-//]);
-//$dotenv = Dotenv\Dotenv::create(dirname(__DIR__), null, $factory);
-//$dotenv->load();
-//
-//var_dump(getenv('DB_DATABASE'));
-//var_dump($_ENV);
+    protected $container;
 
-    public function __construct()
+    public function __construct(Container $container)
     {
-        $factory = new DotenvFactory([
-            new EnvConstAdapter()
-        ]);
-        $dotenv = Dotenv::create(dirname(__DIR__), null, $factory);
-    }
-    public function get(){
+        $this->container = $container;
+        $this->dotenv();
 
+    }
+
+    public function dotenv()
+    {
+        $dotenv = Dotenv::create(dirname(__DIR__));
+        $dotenv->load();
+    }
+
+    public function get($name)
+    {
+        return getenv($name);
+    }
+
+    public function all($name)
+    {
+        return $_ENV;
     }
 
 
