@@ -46,6 +46,7 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
 //$app->bind(\App\Controller\LevelTwo::class);
 //$app->contexts(\App\Controller\DemoFirst::class,\App\Controller\Demo::class,\App\Controller\DemoOne::class);
 //$app->contexts(\App\Controller\DemoSecond::class,\App\Controller\Demo::class,\App\Controller\DemoTwo::class);
+//var_dump($app);
 //$demofirst = $app->instance(\App\Controller\DemoFirst::class);
 //var_dump($demofirst);
 //$demo = $demofirst->getDemo();
@@ -56,11 +57,13 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
 //var_dump($app);
 //$i = $app->getInstance(\App\Controller\DemoFirst::class);
 //var_dump($i);
-$app->bind(\App\Controller\Demo::class,function($a,$b,$c){
-    return new \App\Controller\DemoTwo($a,$b,$c);
-});
-//var_dump($app);
-$app->alias(\App\Controller\Demo::class,'ali');
-//$instance = $app->instance(\App\Controller\Demo::class,['a'=>1,'b'=>2,'c'=>3]);
-$instance = $app->instance('ali',['a'=>1,'b'=>2,'c'=>3]);
-var_dump($instance);
+
+
+//$app->bind(\App\Controller\Demo::class,function($a,$b,$c){
+//    return new \App\Controller\DemoTwo($a,$b,$c);
+//});
+////var_dump($app);
+//$app->alias(\App\Controller\Demo::class,'ali');
+////$instance = $app->instance(\App\Controller\Demo::class,['a'=>1,'b'=>2,'c'=>3]);
+//$instance = $app->instance('ali',['a'=>1,'b'=>2,'c'=>3]);
+//var_dump($instance);

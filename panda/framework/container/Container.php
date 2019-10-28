@@ -98,16 +98,17 @@ class Container
      */
     public function instanceByClosure($abstract,$par=[])
     {
+        //如果有别名就获取到真实的名称
+        $abstract = $this->getNameByAlias($abstract);
         //判断是否重新实例化，单例的话不用重新实例化
         $isNewInstance = $this->isNewInstance($abstract);
         //判断是否有上下文绑定
         $isNeedContext = $this->isNeedContext($abstract);
         //判断是否有实例存在
-        $isHasInstance = $this->isHasInstance($abstract);
-        var_dump($isHasInstance);die();
+        $getInstance = $this->getInstance($abstract);
         //如果这个抽象的实例存在，则直接返回
-        if ($isHasInstance && !$isNewInstance && !$isNeedContext) {
-            return $isHasInstance;
+        if ($getInstance && !$isNewInstance && !$isNeedContext) {
+            return $getInstance;
         }
         //获取抽象实例
         $concrete = $this->getConcrete($abstract);
@@ -150,18 +151,20 @@ class Container
     /**
      * 判断是否有实例化
      */
-    public function isHasInstance($abstract){
-        //首先判断是否有别名
-        var_dump($abstract);
-        var_dump($this->aliases);
-        $alias = isset($this->aliases[$abstract])?$this->aliases[$abstract]:null;
-        if (!is_null($alias) && isset($this->instances[$alias])){
-            return $this->instances[$alias];
-        }
+    public function getInstance($abstract){
         if (isset($this->instances[$abstract])){
             return $this->instances[$abstract];
         }
         return false;
+    }
+
+    /**
+     * 获取别名
+     * @param $abstract
+     * @return mixed|null
+     */
+    public function getNameByAlias($abstract){
+        return isset($this->aliases[$abstract])?$this->aliases[$abstract]:$abstract;
     }
 
     /**
@@ -283,7 +286,7 @@ class Container
      */
     public function alias($abstract, $name)
     {
-        $this->aliases[$abstract] = $name;
+        $this->aliases[$name] = $abstract;
         return $this;
     }
 
@@ -314,15 +317,6 @@ class Container
     }
 
 
-    /**
-     * 获取实例化的类
-     */
-    public function getInstance($name)
-    {
-        if (isset($this->instances[$name])) {
-            return $this->instances[$name];
-        }
-    }
 
 
 }

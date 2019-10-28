@@ -25,7 +25,7 @@ class Application extends Container
     /**
      * 实例化类
      */
-    public function instance($abstract,$paramters){
+    public function instance($abstract,$paramters=[]){
         return $this->instanceByClosure($abstract,$paramters);
     }
 
