@@ -60,5 +60,5 @@ $app->bind(\App\Controller\Demo::class,function($a,$b,$c){
     return new \App\Controller\DemoTwo($a,$b,$c);
 });
 //var_dump($app);
-$instance = $app->instance(\App\Controller\Demo::class);
+$instance = $app->instance(\App\Controller\Demo::class,['a'=>1,'b'=>2,'c'=>3]);
 var_dump($instance);

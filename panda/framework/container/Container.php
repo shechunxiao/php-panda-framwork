@@ -247,7 +247,6 @@ class Container
         if (is_object($param)) {
             return $this->instanceByClosure($param->getClass()->name);
         }
-        echo '单个参数解析错误';die();
     }
 
     /**
