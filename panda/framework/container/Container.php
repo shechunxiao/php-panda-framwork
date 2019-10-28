@@ -102,9 +102,12 @@ class Container
         $isNewInstance = $this->isNewInstance($abstract);
         //判断是否有上下文绑定
         $isNeedContext = $this->isNeedContext($abstract);
+        //判断是否有实例存在
+        $isHasInstance = $this->isHasInstance($abstract);
+        var_dump($isHasInstance);die();
         //如果这个抽象的实例存在，则直接返回
-        if (isset($this->instances[$abstract]) && !$isNewInstance && !$isNeedContext) {
-            return $this->instances[$abstract];
+        if ($isHasInstance && !$isNewInstance && !$isNeedContext) {
+            return $isHasInstance;
         }
         //获取抽象实例
         $concrete = $this->getConcrete($abstract);
@@ -142,6 +145,23 @@ class Container
                 return $this->contexts[$isInstancing][$abstract];
             }
         }
+    }
+
+    /**
+     * 判断是否有实例化
+     */
+    public function isHasInstance($abstract){
+        //首先判断是否有别名
+        var_dump($abstract);
+        var_dump($this->aliases);
+        $alias = isset($this->aliases[$abstract])?$this->aliases[$abstract]:null;
+        if (!is_null($alias) && isset($this->instances[$alias])){
+            return $this->instances[$alias];
+        }
+        if (isset($this->instances[$abstract])){
+            return $this->instances[$abstract];
+        }
+        return false;
     }
 
     /**
@@ -263,7 +283,7 @@ class Container
      */
     public function alias($abstract, $name)
     {
-        $this->aliases[$abstract][] = $name;
+        $this->aliases[$abstract] = $name;
         return $this;
     }
 
