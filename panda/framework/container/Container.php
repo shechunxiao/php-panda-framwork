@@ -291,18 +291,18 @@ class Container
         return $this;
     }
 
-    /**
-     * 给服务绑定一个扩展器
-     */
-    public function extenders($abstract, Closure $closure)
-    {
-        if (isset($this->extenders[$abstract])) {
-            $this->instances[$abstract] = $closure($this->instances[$abstract], $this);
-        } else {
-            $this->extenders[$abstract][] = $closure;
-        }
-        return $this;
-    }
+//    /**
+//     * 给服务绑定一个扩展器
+//     */
+//    public function extenders($abstract, Closure $closure)
+//    {
+//        if (isset($this->extenders[$abstract])) {
+//            $this->instances[$abstract] = $closure($this->instances[$abstract], $this);
+//        } else {
+//            $this->extenders[$abstract][] = $closure;
+//        }
+//        return $this;
+//    }
 
     /**
      * 给服务绑定上下文绑定
