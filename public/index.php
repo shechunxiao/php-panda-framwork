@@ -5,6 +5,9 @@
 require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $app = new \Panda\foundation\Application(dirname(__DIR__));
+
+
+
 //$app->bind(\App\Controller\Demo::class,function(){
 //   return new \App\Controller\TestController();
 //});
