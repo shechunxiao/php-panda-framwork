@@ -48,7 +48,9 @@ class Application extends Container
      * 一些核心的服务添加别名
      */
     public function aliasBase(){
-
+        foreach ($this->aliasArr as $name=>$abstract){
+            $this->alias($abstract,$name);
+        }
     }
 
     /**

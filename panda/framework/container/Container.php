@@ -3,6 +3,7 @@
 namespace Panda\container;
 
 use Closure;
+use Panda\foundation\Application;
 
 class Container
 {
@@ -58,6 +59,13 @@ class Container
      * @var array
      */
     protected $contexts = [];
+    /**
+     * 核心服务的别名数组
+     * @var array
+     */
+    protected $aliasArr = [
+        'application'=>'app'
+    ];
 
     /**
      * 绑定服务(如果是回调就绑定到回调数组，如果是对象就绑定到实例化数组)
@@ -96,7 +104,7 @@ class Container
     /**
      * 通过绑定的回调函数实例化类
      */
-    public function instanceByClosure($abstract,$par=[])
+    public function instanceByClosure($abstract, $par = [])
     {
         //如果有别名就获取到真实的名称
         $abstract = $this->getNameByAlias($abstract);
@@ -114,7 +122,7 @@ class Container
         $concrete = $this->getConcrete($abstract);
         //实例化,如果这个回调函数也有参数呢,所以需要解析
         if ($concrete && $concrete instanceof Closure) {
-            $instance = $this->instanceResolveClosure($concrete,$par);
+            $instance = $this->instanceResolveClosure($concrete, $par);
         } else {
             $instance = $this->instanceByReflection($concrete);
         }
@@ -152,8 +160,10 @@ class Container
     /**
      * 获取抽象类的实例化
      */
-    public function getInstance($abstract){
-        if (isset($this->instances[$abstract])){
+    public function getInstance($abstract)
+    {
+        $abstract = $this->getNameByAlias($abstract);
+        if (isset($this->instances[$abstract])) {
             return $this->instances[$abstract];
         }
         return false;
@@ -164,8 +174,9 @@ class Container
      * @param $abstract
      * @return mixed|null
      */
-    public function getNameByAlias($abstract){
-        return isset($this->aliases[$abstract])?$this->aliases[$abstract]:$abstract;
+    public function getNameByAlias($abstract)
+    {
+        return isset($this->aliases[$abstract]) ? $this->aliases[$abstract] : $abstract;
     }
 
     /**
@@ -189,7 +200,8 @@ class Container
     /**
      * 解析回调函数
      */
-    public function instanceResolveClosure($concrete,$par){
+    public function instanceResolveClosure($concrete, $par)
+    {
         $reflection = new \ReflectionFunction($concrete);
         $dependencies = [];
         foreach ($reflection->getParameters() as $param) {
@@ -267,7 +279,8 @@ class Container
     /**
      * 解析单个参数
      */
-    public function resolveArg($param){
+    public function resolveArg($param)
+    {
         if (is_object($param)) {
             return $this->instanceByClosure($param->getClass()->name);
         }
@@ -316,8 +329,6 @@ class Container
         $this->contexts[$when][$abstract] = $concrete;
         return $this;
     }
-
-
 
 
 }
