@@ -30,7 +30,7 @@ class MysqlConnection extends Connection
      * 获取连接参数
      */
     public function setConnectArgs(){
-        $this->newPdo(['database'=>'fdfdsfds']);
+        $pdo = $this->newPdo(['name'=>1,'age'=>2]);
 
     }
 

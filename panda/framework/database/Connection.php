@@ -18,8 +18,11 @@ class Connection
     /**
      * 创建PDO连接对象
      */
-    public function newPdo()
+    public function newPdo($args)
     {
+        extract($args); //从数组中将变量导入到当前的符号表
+        var_dump($name);
+        var_dump($age);
 
     }
 
