@@ -12,6 +12,13 @@ class MysqlConnection extends Connection
     protected $attribute = [
 
     ];
+    /**
+     * mysql连接属性
+     * @var array
+     */
+    protected $connect = [
+        
+    ];
     public function __construct()
     {
 

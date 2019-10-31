@@ -2,6 +2,7 @@
 
 namespace Panda\foundation;
 
+use Panda\common\Env;
 use Panda\container\Container;
 
 class Application extends Container
@@ -19,6 +20,8 @@ class Application extends Container
         $this->instanceSelf();
         //实例化一些核心的类的别名
         $this->aliasBase();
+        //注册核心的服务
+        $this->instanceCore();
     }
 
     /**
@@ -51,6 +54,15 @@ class Application extends Container
         foreach ($this->aliasArr as $name=>$abstract){
             $this->alias($abstract,$name);
         }
+    }
+
+    /**
+     * 注册一些核心的服务
+     */
+    public function instanceCore(){
+        //注册env
+        $this->instances['env'] = new Env($this->instances['path']);
+
     }
 
     /**

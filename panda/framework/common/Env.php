@@ -3,25 +3,19 @@
 namespace Panda\common;
 
 use Dotenv\Dotenv;
-use Dotenv\Environment\Adapter\EnvConstAdapter;
-use Dotenv\Environment\DotenvFactory;
-use Panda\container\Container;
 
 class Env
 {
 
-    protected $container;
-
-    public function __construct(Container $container)
+    public function __construct($basePath)
     {
-        $this->container = $container;
-        $this->dotenv();
+        $this->dotenv($basePath);
 
     }
 
-    public function dotenv()
+    public function dotenv($basePath)
     {
-        $dotenv = Dotenv::create(dirname(__DIR__));
+        $dotenv = Dotenv::create($basePath);
         $dotenv->load();
     }
 
