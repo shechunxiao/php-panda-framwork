@@ -3,6 +3,7 @@
 namespace Panda\database;
 class Connection
 {
+    //生成pdo连接的地方
     /**
      * 基础连接属性
      * @var array
@@ -17,9 +18,9 @@ class Connection
     /**
      * 创建PDO连接对象
      */
-    public function newPdo(...$arguments)
+    public function newPdo()
     {
-        var_dump($database);
+
     }
 
 
