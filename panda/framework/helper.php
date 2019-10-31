@@ -6,6 +6,9 @@ if (!function_exists('my')){
     }
 }
 
+/**
+ * 获取.env的配置
+ */
 if (!function_exists('env')){
     function env($name=null){
         if (is_null($name)){

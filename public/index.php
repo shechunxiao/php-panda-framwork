@@ -5,3 +5,7 @@
 require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $app = new \Panda\foundation\Application(dirname(__DIR__));
+
+
+$connection = new \Panda\database\mysql\MysqlConnection();
+var_dump($connection);

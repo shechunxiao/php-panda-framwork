@@ -1,6 +1,6 @@
 <?php
 
-namespace panda\database\mysql;
+namespace Panda\database\mysql;
 class MysqlQuery
 {
 
