@@ -3,6 +3,7 @@
 namespace Panda\container;
 
 use Closure;
+use Panda\database\query\Query;
 use Panda\foundation\Application;
 
 class Container
@@ -20,6 +21,12 @@ class Container
      * √9.上下文绑定，就是在接口绑定实现类的时候，根据不同的类型提示，实现注入不同的接口实现，从而达到上下文绑定的目的
      * √10.以上概念的实现根本都依托于PHP的垃圾回收机制，有兴趣的可以深入研究
      */
+
+    /**
+     * application实例化存放到静态变量中去,目的就是随时随地可以调用它进行实例化相关的服务，比如门面等地方
+     * @var
+     */
+    protected static $instance;
     /**
      * 存放实例化对象的数组
      * @var array
@@ -66,7 +73,31 @@ class Container
     protected $aliasArr = [
         'application'=>'app'
     ];
+    /**
+     * 需要注册的核心服务
+     * @var array
+     */
+    protected $coreService = [
+        Query::class => Query::class
+    ];
 
+    /**
+     * 获取实例化的容器(存放在静态变量中的)
+     */
+    public static function getInstance(){
+        if (is_null(static::$instance)) {
+            static::$instance = new static;
+        }
+        return static::$instance;
+    }
+
+    /**
+     * 设置实例化的静态变量
+     * @param $instance
+     */
+    public static function setInstance($instance){
+        static::$instance = $instance;
+    }
     /**
      * 绑定服务(如果是回调就绑定到回调数组，如果是对象就绑定到实例化数组)
      */
@@ -78,7 +109,6 @@ class Container
         if ($isSingle) {
             $this->isSingles[$abstract] = true;
         }
-
         if ($concrete instanceof Closure) {
             $this->closures[$abstract] = $concrete;
         } else {
@@ -160,7 +190,7 @@ class Container
     /**
      * 获取抽象类的实例化
      */
-    public function getInstance($abstract)
+    public function getService($abstract)
     {
         $abstract = $this->getNameByAlias($abstract);
         if (isset($this->instances[$abstract])) {
@@ -186,15 +216,16 @@ class Container
      */
     public function getConcrete($abstract)
     {
-        if (!($concrete = $this->isNeedContext($abstract))) {
-            if (isset($this->binds[$abstract])) {
-                $concrete = $this->binds[$abstract];
-            }
-            if (isset($this->closures[$abstract])) {
-                $concrete = $this->closures[$abstract];
-            }
+        if ($concrete = $this->isNeedContext($abstract)) {
+            return $concrete;
         }
-        return $concrete;
+        if (isset($this->binds[$abstract])) {
+            return $this->binds[$abstract];
+        }
+        if (isset($this->closures[$abstract])) {
+            return $this->closures[$abstract];
+        }
+        return $abstract;
     }
 
     /**
@@ -328,6 +359,13 @@ class Container
     {
         $this->contexts[$when][$abstract] = $concrete;
         return $this;
+    }
+
+    /**
+     * 绑定并且实例化
+     */
+    public function bindAndInstance($abstract,$concrete = null,$isSingle = false,$arguments=[]){
+        return $this->bind($abstract,$concrete,$isSingle)->instanceByClosure($abstract,$arguments);
     }
 
 

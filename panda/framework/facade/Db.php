@@ -1,7 +1,13 @@
 <?php
 
 namespace Panda\facade;
-class Db
+class Db extends Facade
 {
-    //db类的门店
+    /**
+     * 用于传递是哪个类的门面
+     * @return string
+     */
+    public static function getFacadeClass(){
+        return 'Db';
+    }
 }

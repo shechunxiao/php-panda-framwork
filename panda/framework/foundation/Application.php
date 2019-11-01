@@ -43,6 +43,7 @@ class Application extends Container
      */
     public function instanceSelf()
     {
+        Container::setInstance($this);
         $this->instances['app'] = $this;
         $this->instances[Container::class] = $this;
     }
@@ -62,7 +63,8 @@ class Application extends Container
     public function instanceCore(){
         //注册env
         $this->instances['env'] = new Env($this->instances['path']);
-
+        //注册所有门面对应的服务
+        $this->instanceCoreService();
     }
 
     /**
@@ -79,6 +81,18 @@ class Application extends Container
     public function instance($abstract, $paramters = [])
     {
         return $this->instanceByClosure($abstract, $paramters);
+    }
+
+    /**
+     * 实例化核心服务类
+     */
+    public function instanceCoreService(){
+        foreach ($this->coreService as $abstract=>$concrete){
+            if (!is_string($abstract)){
+                $abstract = $concrete;
+            }
+            $this->bindAndInstance($abstract,$concrete);
+        }
     }
 
 
