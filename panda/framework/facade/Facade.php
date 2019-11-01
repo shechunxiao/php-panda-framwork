@@ -10,7 +10,7 @@ class Facade
      * 已经实例化的门面
      * @var array
      */
-    protected static $resolveFacade = [];
+    protected static $resolveFacade;
 
     /**
      * 获取门面对应的服务实例化
@@ -38,7 +38,7 @@ class Facade
     public static function __callStatic($method, $arguments)
     {
         $instance = static::getFacadeInstance();
-        call_user_func_array(array($instance,$method),$arguments);
+        return call_user_func_array(array($instance,$method),$arguments);
     }
 
 }
