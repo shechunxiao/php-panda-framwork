@@ -2,7 +2,19 @@
 namespace Panda\database\connector;
 
 class CreateConnect{
-    //用于构建连接的类
+
+    /**
+     * 实例化的连接
+     * @var
+     */
+    protected $connection;
+    /**
+     * 创建连接对象
+     */
+    public function connect(){
+        return $this;
+    }
+
 
 
 

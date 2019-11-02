@@ -72,7 +72,7 @@ class Container
      * @var array
      */
     protected $aliasArr = [
-        'application'=>'app'
+        'application' => 'app'
     ];
     /**
      * 需要注册的核心服务
@@ -91,7 +91,8 @@ class Container
     /**
      * 获取实例化的容器(存放在静态变量中的)
      */
-    public static function getInstance(){
+    public static function getInstance()
+    {
         if (is_null(static::$instance)) {
             static::$instance = new static;
         }
@@ -102,9 +103,11 @@ class Container
      * 设置实例化的静态变量
      * @param $instance
      */
-    public static function setInstance($instance){
+    public static function setInstance($instance)
+    {
         static::$instance = $instance;
     }
+
     /**
      * 绑定服务(如果是回调就绑定到回调数组，如果是对象就绑定到实例化数组)
      */
@@ -371,31 +374,44 @@ class Container
     /**
      * 绑定并且实例化
      */
-    public function bindAndInstance($abstract,$concrete = null,$isSingle = false,$arguments=[]){
-        return $this->bind($abstract,$concrete,$isSingle)->instanceByClosure($abstract,$arguments);
+    public function bindAndInstance($abstract, $concrete = null, $isSingle = false, $arguments = [])
+    {
+        return $this->bind($abstract, $concrete, $isSingle)->instanceByClosure($abstract, $arguments);
     }
 
     /**
      *  解析设置的配置参数
      */
-    public function resolveConfig(){
+    public function resolveConfig()
+    {
         $path = $this->instances['path.config'];
         $configFileNames = scandir($path);
         $config = [];
         //处理情况是，如果是一个文件，并且是一个后缀为.php的文件，那么就引入里面的配置文件，而且还要判断是不是返回的数组，如果是则添加到配置文件中
-        foreach ($configFileNames as $fileName){
-            $realPath = $path.DIRECTORY_SEPARATOR.$fileName;
-            if (is_file($realPath) && pathinfo($realPath)['extension'] == 'php' && is_array($content = include $realPath)){
-                $config = array_merge($config,$content);
+        foreach ($configFileNames as $fileName) {
+            $realPath = $path . DIRECTORY_SEPARATOR . $fileName;
+            if (is_file($realPath) && pathinfo($realPath)['extension'] == 'php' && is_array($content = include $realPath)) {
+                $config = array_merge($config, $content);
             }
         }
-        $this->configs = $config;
+        static::setConfig($config);
     }
+
     /**
-     * 获取解析后的配置文件
+     * 设置配置参数
+     * @param $config
      */
-    public function getConfig(){
-        return self::$configs;
+    public static function setConfig($config)
+    {
+        static::$configs = $config;
+    }
+
+    /**
+     * 获取解析后的配置参数
+     */
+    public static function getConfig()
+    {
+        return static::$configs;
     }
 
 
