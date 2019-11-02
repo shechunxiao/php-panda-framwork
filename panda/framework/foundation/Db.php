@@ -5,13 +5,21 @@ use Panda\container\Container;
 
 class Db
 {
+    protected $container;
     /**
      * 构造初始化
      * Db constructor.
      */
     public function __construct(Container $container)
     {
-        var_dump($container);
+        $this->container = $container;
+    }
+
+    /**
+     * 连接
+     */
+    public function connection(){
+
     }
     /**
      * 通过这个魔术方法分发其他方法
@@ -19,10 +27,10 @@ class Db
      * @param $arguments
      * @return $this
      */
-    public function __call($name, $arguments)
+    public function __call($method, $arguments)
     {
-        var_dump($name);
-        var_dump($arguments);
+        $connection = $this->connection();
+        $connection->$method(...$arguments);
         return $this;
     }
 

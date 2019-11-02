@@ -63,6 +63,8 @@ class Application extends Container
     public function instanceCore(){
         //注册env
         $this->instances['env'] = new Env($this->instances['path']);
+        //注册config里面的配置文件
+        $this->resolveConfig();
         //注册所有门面对应的服务
         $this->instanceCoreService();
     }
@@ -94,6 +96,7 @@ class Application extends Container
             $this->bindAndInstance($abstract,$concrete);
         }
     }
+
 
 
 }

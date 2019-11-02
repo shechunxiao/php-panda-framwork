@@ -32,8 +32,9 @@ class Facade
 
     /**
      * 静态调用方法
-     * @param $name
+     * @param $method
      * @param $arguments
+     * @return mixed
      */
     public static function __callStatic($method, $arguments)
     {

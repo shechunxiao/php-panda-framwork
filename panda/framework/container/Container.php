@@ -3,6 +3,7 @@
 namespace Panda\container;
 
 use Closure;
+use Dotenv\Environment\VariablesInterface;
 use Panda\database\query\Query;
 use Panda\foundation\Application;
 
@@ -80,6 +81,12 @@ class Container
     protected $coreService = [
         Query::class => Query::class
     ];
+
+    /**
+     * 配置文件
+     * @var array
+     */
+    protected static $configs = [];
 
     /**
      * 获取实例化的容器(存放在静态变量中的)
@@ -366,6 +373,29 @@ class Container
      */
     public function bindAndInstance($abstract,$concrete = null,$isSingle = false,$arguments=[]){
         return $this->bind($abstract,$concrete,$isSingle)->instanceByClosure($abstract,$arguments);
+    }
+
+    /**
+     *  解析设置的配置参数
+     */
+    public function resolveConfig(){
+        $path = $this->instances['path.config'];
+        $configFileNames = scandir($path);
+        $config = [];
+        //处理情况是，如果是一个文件，并且是一个后缀为.php的文件，那么就引入里面的配置文件，而且还要判断是不是返回的数组，如果是则添加到配置文件中
+        foreach ($configFileNames as $fileName){
+            $realPath = $path.DIRECTORY_SEPARATOR.$fileName;
+            if (is_file($realPath) && pathinfo($realPath)['extension'] == 'php' && is_array($content = include $realPath)){
+                $config = array_merge($config,$content);
+            }
+        }
+        $this->configs = $config;
+    }
+    /**
+     * 获取解析后的配置文件
+     */
+    public function getConfig(){
+        return self::$configs;
     }
 
 
