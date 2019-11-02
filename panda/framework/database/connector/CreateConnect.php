@@ -9,7 +9,7 @@ class CreateConnect{
      */
     protected $connection;
     /**
-     * 创建连接对象
+     * 创建连接对象,比如如果是mysql就实例化mysql驱动对象。
      */
     public function connect(){
         return $this;

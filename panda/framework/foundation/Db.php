@@ -21,7 +21,7 @@ class Db
      */
     protected $container;
     /**
-     * 连接对象,可能有mysql等数据库类型,这里是暂时只应用了mysql,比如mysql的话，对应的连接对象就是panda/framework/database/connector/MysqlConnect.php该PHP文件的实例化对象。
+     * 连接对象,可能有mysql,sqlite等数据库类型,这里是暂时只应用了mysql,比如mysql的话，对应的连接对象就是panda/framework/database/connector/MysqlConnect.php该PHP文件的实例化对象。
      * @var CreateConnect
      */
     protected $createConnect;
