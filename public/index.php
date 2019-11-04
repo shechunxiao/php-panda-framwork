@@ -6,4 +6,4 @@ require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $app = new \Panda\foundation\Application(dirname(__DIR__));
 
-\Panda\facade\Db::table('first')->count()->table('fdsfds');
+\Panda\facade\Db::table('first')->table('fdsfds')->field(['id','name','age'])->offset(20)->limit(5);
