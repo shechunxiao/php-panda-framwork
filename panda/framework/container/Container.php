@@ -79,7 +79,7 @@ class Container
      * @var array
      */
     protected $coreService = [
-        Query::class => Query::class
+
     ];
 
     /**
@@ -391,7 +391,8 @@ class Container
         foreach ($configFileNames as $fileName) {
             $realPath = $path . DIRECTORY_SEPARATOR . $fileName;
             if (is_file($realPath) && pathinfo($realPath)['extension'] == 'php' && is_array($content = include $realPath)) {
-                $config = array_merge($config, $content);
+                $item[pathinfo($realPath)['filename']] = $content;
+                $config = array_merge($config, $item);
             }
         }
         static::setConfig($config);

@@ -14,6 +14,11 @@ class Db
      *      4.table，where等连续调用的方法只是绑定到相应的变量中去，query和execute等需要调用PDO执行的时候，才实例化连接。
      *      5.在查询完以后就关闭这个连接。将PDO对象设置为null即可实现释放PDO资源了
      *      6.刚开始建立这个框架不考虑读写分离。所以这里的PDO就不考虑读写分离的问题了。
+     * createConnect思路:
+     *      1.需要获取是哪种数据库，比如type是mysql，传入到createConnect中
+     *      2.获取直接在createConnect中获取到相应的参数。
+     *      3.根据不同类型，实例化不同的类，然后返回这个实例化的类，比如MysqlConnect的实例化。
+     *      4.将实例化的保存到$createConnect中，以便下次继续使用，不用再重新实例化了。
      */
     /**
      * 服务容器
@@ -22,6 +27,11 @@ class Db
     protected $container;
     /**
      * 连接对象,可能有mysql,sqlite等数据库类型,这里是暂时只应用了mysql,比如mysql的话，对应的连接对象就是panda/framework/database/connector/MysqlConnect.php该PHP文件的实例化对象。
+     * @var CreateConnect
+     */
+    protected $connect;
+    /**
+     * createConnect对象
      * @var CreateConnect
      */
     protected $createConnect;
@@ -42,9 +52,27 @@ class Db
      */
     public function connection(){
         //先暂时不考虑这个connection是否重新连接的问题,也就是其他数据库配置的问题，先考虑如何实现query类的实例化
-        return $this->createConnect->connect();
+        $type = $this->resolveType();
+        if ($this->connect[$type]){
+            return $this->connect[$type];
+        }
+        $object = $this->createConnect->connect($type);
+        if ($object){
+            $this->connect[$type] = $object;
+        }
+        return $object;
     }
-    /**是
+
+    /**
+     * 解析数据库类型
+     */
+    public function resolveType(){
+        $databaseConfig = $this->container->getConfig()['database'];
+        $databaseEnv = env('DATABASE_TYPE');
+        return $type = $databaseEnv?:$databaseConfig['type'];
+    }
+
+    /**
      * 通过这个魔术方法分发其他方法
      * @param $name
      * @param $arguments
@@ -53,8 +81,8 @@ class Db
     public function __call($method, $arguments)
     {
         $connection = $this->connection();
-//        $connection->$method(...$arguments);
-//        return $this;
+        $connection->$method(...$arguments);
+        return $this;
     }
 
 }
