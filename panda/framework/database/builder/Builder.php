@@ -31,6 +31,7 @@ class Builder
      */
     public function getSql($query){
         $this->query = $query;
+        
 
 
 
