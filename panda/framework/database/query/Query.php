@@ -4,6 +4,7 @@ namespace Panda\database\query;
 
 use Panda\database\builder\Builder;
 use Panda\database\connector\Connect;
+use Panda\database\execute\Execute;
 
 class Query
 {
@@ -16,7 +17,7 @@ class Query
      * 构建sql的类
      * @var Builder
      */
-    protected $builder;
+    protected $execute;
     /**
      * 用于操作的表名
      * @var
@@ -76,7 +77,7 @@ class Query
     public function __construct($connector)
     {
         $this->connector = $connector;
-        $this->builder = new Builder();
+        $this->execute = new Execute();
     }
 
     /**
@@ -261,12 +262,22 @@ class Query
         }
         return $this;
     }
+    /**
+     * 要想执行sql语句，需要以下几个步骤:
+     *      1.获取PDO实例化连接(connector作用)
+     *      2.获取最终要执行的sql语句(builder作用)
+     *      3.执行sql语句
+     *      4.对结果集进行处理
+     *      5.返回最终的处理结果
+     * 问题一:如何处理sql断开连接的问题,也就是pdo实例为null的问题,可以这样处理如果执行错误，那么就用try catch捕捉这个pdo问题，然后再去执行这个查询获取其他操作
+     */
 
     /**
      * 查询全部
      */
     public function select()
     {
+
 
     }
 

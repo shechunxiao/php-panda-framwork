@@ -39,4 +39,7 @@ $result = \Panda\facade\Db::table('first as f')
         ->orders('id desc,name asc')
         ->select()
         ;
-var_dump($result);
+//var_dump($result);
+
+$dbh = new PDO('mysql:host=localhost;dbname=shechunxiao', 'root', '');
+var_dump($dbh);
