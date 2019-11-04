@@ -81,8 +81,7 @@ class Db
     public function __call($method, $arguments)
     {
         $connection = $this->connection();
-        $connection->$method(...$arguments);
-        return $this;
+        return $connection->$method(...$arguments);
     }
 
 }

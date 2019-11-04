@@ -21,7 +21,7 @@ $wh[] = ['test','=',1];
 $wh[] = ['test2','=',1];
 //var_dump($wh);
 
-\Panda\facade\Db::table('first as f')
+$result = \Panda\facade\Db::table('first as f')
         ->field(['id','name','age'])
         ->joins('second as s','first.id','second.id','left')
         ->joins('three as t','three.id','second.id','right')
@@ -37,4 +37,6 @@ $wh[] = ['test2','=',1];
         ->group('id,test')
         ->having('tet','=','12321')
         ->orders('id desc,name asc')
-        ->select();
+        ->select()
+        ;
+var_dump($result);

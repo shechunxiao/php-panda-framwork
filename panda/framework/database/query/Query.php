@@ -2,6 +2,7 @@
 
 namespace Panda\database\query;
 
+use Panda\database\builder\Builder;
 use Panda\database\connector\Connect;
 
 class Query
@@ -11,6 +12,11 @@ class Query
      * @var
      */
     protected $connector;
+    /**
+     * 构建sql的类
+     * @var Builder
+     */
+    protected $builder;
     /**
      * 用于操作的表名
      * @var
@@ -70,6 +76,7 @@ class Query
     public function __construct($connector)
     {
         $this->connector = $connector;
+        $this->builder = new Builder();
     }
 
     /**
@@ -286,6 +293,5 @@ class Query
     {
 
     }
-
 
 }
