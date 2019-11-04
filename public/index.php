@@ -32,4 +32,9 @@ $wh[] = ['test2','=',1];
         ->where('tf','between',[1,2])
         ->where('tf','in',[3,4])
         ->offset(20)
-        ->limit(5);
+        ->limit(5)
+        ->group(['id','name'])
+        ->group('id,test')
+        ->having('tet','=','12321')
+        ->orders('id desc,name asc')
+        ->select();

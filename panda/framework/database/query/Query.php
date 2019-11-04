@@ -37,15 +37,31 @@ class Query
      */
     protected $wheres = [];
     /**
-     *  偏移
+     * 分组
+     * @var array
+     */
+    protected $groups;
+    /**
+     * having条件
      * @var
      */
-    protected $offset;
+    protected $havings = [];
+    /**
+     * 排序
+     * @var
+     */
+    protected $orders;
     /**
      *  限制数量
      * @var
      */
     protected $limit;
+    /**
+     *  偏移
+     * @var
+     */
+    protected $offset;
+
 
     /**
      * 构造函数
@@ -161,6 +177,21 @@ class Query
     }
 
     /**
+     * 排序
+     * @param $parameter
+     * @return $this
+     */
+    public function orders($parameter)
+    {
+        if (is_array($parameter)) {
+            $this->orders = join(',', $parameter);
+        } else {
+            $this->orders = $parameter;
+        }
+        return $this;
+    }
+
+    /**
      * 偏移
      * @param int $parameter
      * @return $this
@@ -194,6 +225,66 @@ class Query
     {
         $this->joins[] = [$table, $onFirst, $onSecond, $type];
         return $this;
+    }
+
+    /**
+     * 分组group by
+     * @param $parameter
+     * @return $this
+     */
+    public function group($parameter)
+    {
+        if (is_array($parameter)) {
+            $this->groups = join(',', $parameter);
+        } else {
+            $this->groups = $parameter;
+        }
+        return $this;
+    }
+
+    /**
+     * having条件
+     */
+    public function having($field, $exp = '', $value = '')
+    {
+        if (is_array($field)) { //直接就规定只能是二维数组
+            $this->havings = array_merge($this->wheres, $field);
+        } else {
+            $this->havings[] = [$field, $exp, $value];
+        }
+        return $this;
+    }
+
+    /**
+     * 查询全部
+     */
+    public function select()
+    {
+
+    }
+
+    /**
+     * 查询一条语句（limit 1）
+     */
+    public function first()
+    {
+
+    }
+
+    /**
+     * 更新
+     */
+    public function update()
+    {
+
+    }
+
+    /**
+     * 删除
+     */
+    public function delete()
+    {
+
     }
 
 
