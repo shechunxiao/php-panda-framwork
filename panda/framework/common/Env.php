@@ -10,7 +10,6 @@ class Env
     public function __construct($basePath)
     {
         $this->dotenv($basePath);
-
     }
 
     public function dotenv($basePath)

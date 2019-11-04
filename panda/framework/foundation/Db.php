@@ -41,6 +41,7 @@ class Db
      * 这个方法需要判断是否connect其他的数据库配置,从而实现数据库的切换
      */
     public function connection(){
+        //先暂时不考虑这个connection是否重新连接的问题,也就是其他数据库配置的问题，先考虑如何实现query类的实例化
         return $this->createConnect->connect();
     }
     /**是
