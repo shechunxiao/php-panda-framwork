@@ -27,10 +27,15 @@ class Query
      */
     protected $fields;
     /**
+     * 关联查询
+     * @var
+     */
+    protected $joins;
+    /**
      *  条件
      * @var
      */
-    protected $wheres;
+    protected $wheres = [];
     /**
      *  偏移
      * @var
@@ -143,17 +148,16 @@ class Query
      * @param $field
      * @param $exp
      * @param $value
+     * @return $this
      */
-    public function where($field, $exp, $value)
+    public function where($field, $exp = '', $value = '')
     {
-        if (is_array($field)) {
-            if (count($field, COUNT_RECURSIVE) == count($field)) { //如果相等则为一维数组
-
-            } else {//否则为二维数组,多维的不考虑
-
-            }
+        if (is_array($field)) { //直接就规定只能是二维数组
+            $this->wheres = array_merge($this->wheres, $field);
+        } else {
+            $this->wheres[] = [$field, $exp, $value];
         }
-        $this->wheres[] = [$field, $exp, $value];
+        return $this;
     }
 
     /**
@@ -175,6 +179,20 @@ class Query
     public function limit($parameter)
     {
         $this->limit = $parameter;
+        return $this;
+    }
+
+    /**
+     * 关联查询
+     * @param $table (关联的表)
+     * @param $onFirst
+     * @param $onSecond
+     * @param string $type (关联类型)
+     * @return $this
+     */
+    public function joins($table, $onFirst, $onSecond, $type = '')
+    {
+        $this->joins[] = [$table, $onFirst, $onSecond, $type];
         return $this;
     }
 

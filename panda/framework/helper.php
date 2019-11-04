@@ -1,11 +1,5 @@
 <?php
 
-if (!function_exists('my')){
-    function my(){
-        echo 'my';
-    }
-}
-
 /**
  * 获取.env的配置
  */
