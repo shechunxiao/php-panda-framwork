@@ -6,4 +6,4 @@ require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $app = new \Panda\foundation\Application(dirname(__DIR__));
 
-\Panda\facade\Db::table('name')->field('fdfd')->select();
+\Panda\facade\Db::table('first')->count()->table('fdsfds');
