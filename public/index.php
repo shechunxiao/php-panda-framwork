@@ -41,5 +41,5 @@ $result = \Panda\facade\Db::table('first as f')
         ;
 //var_dump($result);
 
-$dbh = new PDO('mysql:host=localhost;dbname=shechunxiao', 'root', '');
-var_dump($dbh);
+//$dbh = new PDO('mysql:host=localhost;dbname=shechunxiao', 'root', '');
+//var_dump($dbh);

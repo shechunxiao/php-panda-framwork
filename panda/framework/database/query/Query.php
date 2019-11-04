@@ -9,15 +9,25 @@ use Panda\database\execute\Execute;
 class Query
 {
     /**
+     * pdo连接
+     * @var
+     */
+    protected $pdo;
+    /**
      * 某一类型的连接器对象，比如MysqlConnect
      * @var
      */
     protected $connector;
     /**
-     * 构建sql的类
+     * 执行sql的类
      * @var Builder
      */
     protected $execute;
+    /**
+     * 构建sql的类
+     * @var Builder
+     */
+    protected $builder;
     /**
      * 用于操作的表名
      * @var
@@ -77,6 +87,7 @@ class Query
     public function __construct($connector)
     {
         $this->connector = $connector;
+        $this->builder = new Builder();
         $this->execute = new Execute();
     }
 
@@ -277,8 +288,28 @@ class Query
      */
     public function select()
     {
+        //获取实例化的连接
+        if (empty($this->pdo)){
+            $this->pdo = $this->connector->connect();
+        }
+        //获取最终要执行的语句
+        $sql = $this->builder->getSql($this);
+        $method  = __FUNCTION__;
+        try{
 
+        }catch (\PDOException $e){
+            //这个地方需要限制次数,如果不加限制，就死循环了
+//            $this->flush()->$method();
+            echo $e->getLine().'/'.$e->getMessage();
+        }
+    }
 
+    /**
+     * 清除pdo
+     */
+    public function flush(){
+        $this->pdo = null;
+        return $this;
     }
 
     /**

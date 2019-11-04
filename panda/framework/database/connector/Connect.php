@@ -2,11 +2,13 @@
 
 namespace Panda\database\connector;
 
+use Panda\container\Container;
 use PDO;
 
 class Connect
 {
     protected $connect;
+    protected $container;
     /**
      * PDO属性
      * @var array
@@ -19,8 +21,44 @@ class Connect
         PDO::ATTR_STRINGIFY_FETCHES => false //是否将取出来的数据转换成字符串类型
     ];
 
+    public function __construct()
+    {
+        $this->container = new Container();
+    }
+
+    /**
+     * 构建PDO
+     *  new PDO('mysql:host=123.4.5.6;dbname=test_db;port=3306','username','password');
+     *  new PDO('mysql:host=localhost;dbname=test;charset=utf8', $user, $pass);
+     */
+    public function newPDO($type, $host, $dbname, $port=3306, $charset = 'utf8', $username, $password)
+    {
+        try {
+            $dns = "$type:host=$host;dbname=$dbname;charset=$charset";
+            return new PDO($dns, $username, $password);
+        } catch (\PDOException $e) {
+            echo $e->getLine() . '/' . $e->getMessage();
+        }
+    }
+
+    /**
+     * 获取PDO对象
+     */
     public function connect()
     {
+        $args = $this->resolveArgs();
+        extract($args);
+        return $this->newPDO($type, $host, $dbname, $port, $charset, $username, $password);
+    }
+
+    /**
+     * 解析pdo连接参数
+     */
+    public function resolveArgs()
+    {
+        $config = $this->container->getConfig();
+        $database = $config['database'];
+        return $database;
     }
 
 
