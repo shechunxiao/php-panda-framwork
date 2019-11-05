@@ -41,9 +41,20 @@ $wh[] = ['test2','=',1];
 //        ;
 //var_dump($result);
 
-$data = \Panda\facade\Db::table('first')->field('id,name,inter')->where('id','>',35)->select();
-var_dump($data);
+//$data = \Panda\facade\Db::table('first')->field('id,name,inter')->where('id','<>',5)->orders('id DESC')->select();
+//$data = \Panda\facade\Db::table('first')->where('id','=',19)->update([
+//    'name'=>'1321321321'
+//]);
+//var_dump($data);
 
+//$data = \Panda\facade\Db::table('first')->where('id','=',21)->delete();
+//var_dump($data);
+
+//$data = \Panda\facade\Db::table('first')->insert([
+//    'name'=>'添加数据',
+//    'inter'=>100
+//]);
+//var_dump($data);
 
 //$dbh = new PDO('mysql:host=localhost;dbname=shechunxiao', 'root', '',[
 //    PDO::ATTR_CASE => PDO::CASE_NATURAL,
