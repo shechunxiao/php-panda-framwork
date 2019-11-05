@@ -242,7 +242,12 @@ class Query
      */
     public function joins($table, $onFirst, $onSecond, $type = '')
     {
-        $this->joins[] = [$table, $onFirst, $onSecond, $type];
+        $this->joins[] = [
+            'table'=>$table,
+            'onFirst'=>$onFirst,
+            'onSecond'=>$onSecond,
+            'type'=>$type
+        ];
         return $this;
     }
 
@@ -290,16 +295,18 @@ class Query
     {
         //获取实例化的连接
         if (empty($this->pdo)) {
-            $this->pdo = $this->connector->connect();
+            $this->pdo = $this->connector->getConnect();
         }
+//        var_dump($this->pdo);
         //获取最终要执行的语句
         $method = __FUNCTION__;
         $arguments = $this->resolveParams();
         $sql = $this->builder->getSql($arguments, $method);
-
         try {
-
+            $result = $this->pdo->query($sql);
+            var_dump($result->fetchAll());
         } catch (\PDOException $e) {
+
             //这个地方需要限制次数,如果不加限制，就死循环了
             $this->flush()->$method();
             echo $e->getLine() . '/' . $e->getMessage();
@@ -311,9 +318,8 @@ class Query
      */
     public function resolveParams(){
         return [
-            'table'=>$this->table,
-            'aggregate'=>$this->aggregate,
             'fields'=>$this->fields,
+            'table'=>$this->table,
             'joins'=>$this->joins,
             'wheres'=>$this->wheres,
             'groups'=>$this->groups,

@@ -31,7 +31,7 @@ class Connect
      *  new PDO('mysql:host=123.4.5.6;dbname=test_db;port=3306','username','password');
      *  new PDO('mysql:host=localhost;dbname=test;charset=utf8', $user, $pass);
      */
-    public function newPDO($type, $host, $dbname, $port=3306, $charset = 'utf8', $username, $password)
+    public function newPDO($type, $host, $dbname, $port = 3306, $charset = 'utf8', $username, $password)
     {
         try {
             $dns = "$type:host=$host;dbname=$dbname;charset=$charset";
@@ -44,11 +44,14 @@ class Connect
     /**
      * 获取PDO对象
      */
-    public function connect()
+    public function connect($attribute = null)
     {
+        if (is_null($attribute)){
+            $attribute = $this->baseAttribute;
+        }
         $args = $this->resolveArgs();
         extract($args);
-        return $this->newPDO($type, $host, $dbname, $port, $charset, $username, $password);
+        return $this->newPDO($type, $host, $dbname, $port, $charset, $username, $password,$attribute);
     }
 
     /**

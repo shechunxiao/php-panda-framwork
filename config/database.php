@@ -7,7 +7,7 @@ return [
     //域名
     'host' => '127.0.0.1',
     // 数据库名
-    'dbname' => '',
+    'dbname' => 'shechunxiao',
     //端口
     'port' => '3306',
     //字符集

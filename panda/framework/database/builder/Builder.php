@@ -34,21 +34,22 @@ class Builder
     public function getSql($arguments, $type)
     {
         $this->arguments = $arguments;
+        $arguments = $this->resolveParameters($arguments);
         switch (strtolower($type)) {
             case 'select':
-                $sql = $this->select();
+                $sql = $this->select($arguments);
                 break;
             case 'first':
-                $sql = $this->first();
+                $sql = $this->first($arguments);
                 break;
             case 'update':
-                $sql = $this->update();
+                $sql = $this->update($arguments);
                 break;
             case 'delete':
-                $sql = $this->delete();
+                $sql = $this->delete($arguments);
                 break;
             case 'insert':
-                $sql = $this->insert();
+                $sql = $this->insert($arguments);
                 break;
         }
         return $sql;
@@ -57,10 +58,15 @@ class Builder
     /**
      * 获取select的对应语句
      */
-    public function select()
+    public function select($arguments)
     {
-//        $sql = 'select '.$this->query->fields;
-//        var_dump($sql);
+        $sql = ' select ';
+        foreach ($arguments as $key=>$value){
+            if (!is_null($value)){
+                $sql .= $value;
+            }
+        }
+        return $sql;
     }
 
     /**
@@ -96,42 +102,98 @@ class Builder
     }
 
     /**
-     * count等聚合函数单独调用
+     * 聚合函数单独调用
      */
-    public function count(){
+    public function aggregate()
+    {
 
     }
 
     /**
-     * 解析聚合函数
+     * 解析所有的变量
      */
-    public function resolveAggregate()
+    public function resolveParameters($arguments)
     {
-
+        $param = [
+            'fields' => $arguments['fields'],
+            'from' => ' from '.$arguments['table'].' ',
+            'joins' => $this->resolveJoins($arguments['joins']),
+            'wheres' => $this->resolveWheres($arguments['wheres']),
+            'groups' => !empty($arguments['groups'])?' group by '.$arguments['groups'].' ':'',
+            'havings' => $this->resolveHavings($arguments['havings']),
+            'orders' => !empty($arguments['orders'])?' order by '.$arguments['orders'].' ':'',
+            'limit' => !empty($arguments['limit'])?' limit '.$arguments['limit'].' ':'',
+            'offset' => !empty($arguments['offset'])?' offset '.$arguments['offset']:''
+        ];
+        return $param;
     }
+
 
     /**
      * 解析join连接
      */
-    public function resolveJoins()
+    public function resolveJoins($joins)
     {
-
+        $join = '';
+        if (empty($joins)){
+            return $join;
+        }
+        foreach ($joins as $key=>$value){
+            if ($value['type']){
+                $join .= strtolower($value['type']).' join '.$value['table'].' on '.$value['onFirst'].' = '.$value['onSecond'].' ';
+            }else{
+                $join .= 'join '.$value['table'].' on '.$value['onFirst'].' = '.$value['onSecond'].' ';
+            }
+        }
+        return $join;
     }
 
     /**
      * 解析wheres
      */
-    public function resolveWheres()
+    public function resolveWheres($wheres)
     {
-
+        $where = '';
+        if (empty($wheres)){
+            return $where;
+        }
+        foreach ($wheres as $key=>$value){
+            if (strtolower($value[1]) == 'between'){
+                $where .= ' and '.$value[0].' between '.$value[2][0].' and '.$value[2][1];
+            }elseif (strtolower($value[1]) == 'in'){
+                $inArr = join(',',$value[2]);
+                $where .= ' and '.$value[0].' in '."($inArr)";
+            }else{
+                $where .= ' and '.$value[0].' '.$value[1].' '.$value[2];
+            }
+        }
+        $where = substr($where,4);
+        $where = 'where'.$where;
+        return $where;
     }
 
     /**
      * 解析havings
      */
-    public function resolveHavings()
+    public function resolveHavings($wheres)
     {
-
+        $where = '';
+        if (empty($wheres)){
+            return $where;
+        }
+        foreach ($wheres as $key=>$value){
+            if (strtolower($value[1]) == 'between'){
+                $where .= ' and '.$value[0].' between '.$value[2][0].' and '.$value[2][1];
+            }elseif (strtolower($value[1]) == 'in'){
+                $inArr = join(',',$value[2]);
+                $where .= ' and '.$value[0].' in '."($inArr)";
+            }else{
+                $where .= ' and '.$value[0].' '.$value[1].' '.$value[2];
+            }
+        }
+        $where = substr($where,4);
+        $where = 'having'.$where;
+        return $where;
     }
 
 }
