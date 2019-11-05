@@ -293,13 +293,14 @@ class Query
             $this->pdo = $this->connector->connect();
         }
         //获取最终要执行的语句
-        $sql = $this->builder->getSql($this);
         $method  = __FUNCTION__;
+        $sql = $this->builder->getSql($this,$method);
+
         try{
 
         }catch (\PDOException $e){
             //这个地方需要限制次数,如果不加限制，就死循环了
-//            $this->flush()->$method();
+            $this->flush()->$method();
             echo $e->getLine().'/'.$e->getMessage();
         }
     }
