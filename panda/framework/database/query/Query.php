@@ -303,13 +303,13 @@ class Query
         $arguments = $this->resolveParams();
         $sql = $this->builder->getSql($arguments, $method);
         try {
-            $result = $this->pdo->query($sql);
-            var_dump($result->fetchAll());
+            $PDOStatement = $this->pdo->query($sql);
+            $result = $PDOStatement->fetchAll();
+            return $result;
         } catch (\PDOException $e) {
-
             //这个地方需要限制次数,如果不加限制，就死循环了
             $this->flush()->$method();
-            echo $e->getLine() . '/' . $e->getMessage();
+            echo $e->getLine() . '/' . $e->getMessage();die();
         }
     }
 
