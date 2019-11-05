@@ -289,26 +289,46 @@ class Query
     public function select()
     {
         //获取实例化的连接
-        if (empty($this->pdo)){
+        if (empty($this->pdo)) {
             $this->pdo = $this->connector->connect();
         }
         //获取最终要执行的语句
-        $method  = __FUNCTION__;
-        $sql = $this->builder->getSql($this,$method);
+        $method = __FUNCTION__;
+        $arguments = $this->resolveParams();
+        $sql = $this->builder->getSql($arguments, $method);
 
-        try{
+        try {
 
-        }catch (\PDOException $e){
+        } catch (\PDOException $e) {
             //这个地方需要限制次数,如果不加限制，就死循环了
             $this->flush()->$method();
-            echo $e->getLine().'/'.$e->getMessage();
+            echo $e->getLine() . '/' . $e->getMessage();
         }
+    }
+
+    /**
+     * 获取所有的变量
+     */
+    public function resolveParams(){
+        return [
+            'table'=>$this->table,
+            'aggregate'=>$this->aggregate,
+            'fields'=>$this->fields,
+            'joins'=>$this->joins,
+            'wheres'=>$this->wheres,
+            'groups'=>$this->groups,
+            'havings'=>$this->havings,
+            'orders'=>$this->orders,
+            'limit'=>$this->limit,
+            'offset'=>$this->offset
+        ];
     }
 
     /**
      * 清除pdo
      */
-    public function flush(){
+    public function flush()
+    {
         $this->pdo = null;
         return $this;
     }
@@ -333,6 +353,14 @@ class Query
      * 删除
      */
     public function delete()
+    {
+
+    }
+
+    /**
+     * 添加
+     */
+    public function insert()
     {
 
     }

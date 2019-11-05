@@ -5,10 +5,10 @@ namespace Panda\database\builder;
 class Builder
 {
     /**
-     * query实例化对象
+     * 参数数组
      * @var
      */
-    protected $query;
+    protected $arguments;
     /**
      * 拼接sql的顺序
      * @var array
@@ -31,9 +31,9 @@ class Builder
      * @param $query
      * @param $type
      */
-    public function getSql($query, $type)
+    public function getSql($arguments, $type)
     {
-        $this->query = $query;
+        $this->arguments = $arguments;
         switch (strtolower($type)) {
             case 'select':
                 $sql = $this->select();
@@ -59,7 +59,8 @@ class Builder
      */
     public function select()
     {
-
+//        $sql = 'select '.$this->query->fields;
+//        var_dump($sql);
     }
 
     /**
@@ -91,6 +92,13 @@ class Builder
      */
     public function insert()
     {
+
+    }
+
+    /**
+     * count等聚合函数单独调用
+     */
+    public function count(){
 
     }
 
