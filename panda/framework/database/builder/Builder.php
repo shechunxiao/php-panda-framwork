@@ -121,7 +121,7 @@ class Builder
     public function resolveParameters($arguments)
     {
         $param = [
-            'fields' => $arguments['fields'],
+            'fields' => $arguments['fields']?:'*',
             'from' => ' from ' . $arguments['table'] . ' ',
             'joins' => $this->resolveJoins($arguments['joins']),
             'wheres' => $this->resolveWheres($arguments['wheres']),

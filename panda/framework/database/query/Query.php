@@ -310,7 +310,8 @@ class Query
             return $result;
         } catch (\PDOException $e) {
             //这个地方需要限制次数,如果不加限制，就死循环了
-            $this->flush()->$method();
+//            $this->flush()->$method();
+            var_dump($sql);
             echo $e->getLine() . '/' . $e->getMessage();
             die();
         }
