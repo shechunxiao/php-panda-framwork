@@ -28,6 +28,7 @@ class Query
      * @var Builder
      */
     protected $builder;
+
     /**
      * 用于操作的表名
      * @var
