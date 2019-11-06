@@ -51,7 +51,7 @@ class Connect
             $attribute = $this->baseAttribute;
         }
         $args = $this->resolveArgs();
-        extract($args);
+        extract($args,EXTR_SKIP);
         return $this->newPDO($type, $host, $dbname, $port, $charset, $username, $password,$attribute);
     }
 
