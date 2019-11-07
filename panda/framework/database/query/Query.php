@@ -92,6 +92,7 @@ class Query
     /**
      * 构造函数
      * Query constructor.
+     * @param $connector
      */
     public function __construct($connector)
     {
@@ -102,11 +103,12 @@ class Query
 
     /**
      * 表名
+     * @param $table
      * @return $this
      */
-    public function table($name)
+    public function table($table)
     {
-        $this->table = $name;
+        $this->table = $table;
         return $this;
     }
 
@@ -176,19 +178,21 @@ class Query
     }
 
     /**
-     * 关联查询
-     * @param $table (关联的表)
-     * @param $onFirst
-     * @param $onSecond
-     * @param string $type (关联类型)
-     * @return $this
+     * 关联查询(type有4中，inner，left，right，cross)
+     * @param $table
+     * @param $first
+     * @param $operator
+     * @param $second
+     * @param string $type
+     * @return Query
      */
-    public function joins($table, $onFirst, $onSecond, $type = '')
+    public function join($table, $first, $operator, $second, $type = 'inner')
     {
         $this->joins[] = [
             'table' => $table,
-            'onFirst' => $onFirst,
-            'onSecond' => $onSecond,
+            'first' => $first,
+            'operator' => $operator,
+            'second' => $second,
             'type' => $type
         ];
         return $this;
