@@ -153,26 +153,33 @@ class Query
      *      ['>',1,'and'],
      *      ['<',10,'or']
      * ]
-     * $where[] = [
-     *      ['id','>',1],
-     *      ['id','<',10],
-     * ]
+     * $where['id'] = ['>','1']
      *
      * $where[] = ['id','>',1]
+     *
+     * 三种情况，
+     *      第一种，key为字符串，且为二维数组
+     *      第二种，key为字符串，且为一维数组
+     *      第三种，key为数字，且为一维数组
      *
      */
     /**
      * where条件为数组
      * @param $fields
-     * @param $where
      */
-    public function dealWhereArray($fields, $where)
+    public function dealWhereArray($fields)
     {
-        foreach ($fields as $key=>$value){
-            if (is_numeric($key) && is_array($value)){//key为数字
-               
-            }else{//key不为数字，如id,name等字段名
-
+        foreach ($fields as $key => $value) {
+            $isOneLevel = true;
+            if (count($value) != count($value,COUNT_RECURSIVE)){
+                $isOneLevel = false;
+            }
+            if (is_numeric($key) && $isOneLevel){ //key为数字，且为一维数组
+                $this->where(...array_values($value));
+            }elseif (!is_numeric($key) && $isOneLevel){//key为字符串，且为一维数组
+                $this->where($key,...array_values($value));
+            }elseif (!is_numeric($key) && !$isOneLevel){//key为字符串，且为二维数组
+                $this->where($key,'=',$value);
             }
         }
     }
