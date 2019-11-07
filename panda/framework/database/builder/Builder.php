@@ -9,6 +9,14 @@ class Builder
      * @var
      */
     protected $arguments;
+    public $operators = [
+        '=', '<', '>', '<=', '>=', '<>', '!=',
+        'like', 'like binary', 'not like', 'between', 'ilike',
+        '&', '|', '^', '<<', '>>',
+        'rlike', 'regexp', 'not regexp',
+        '~', '~*', '!~', '!~*', 'similar to',
+        'not similar to', 'not ilike', '~~*', '!~~*',
+    ];
     /**
      * 拼接sql的顺序
      * @var array
