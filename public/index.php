@@ -20,7 +20,7 @@ $where3['last'] = [
     ['<',20,'or']
 ];
 $data = \Panda\facade\Db::table('first')->where($where)->where($where2)->where($where3);
-var_dump($data);
+//var_dump($data);
 
 
 

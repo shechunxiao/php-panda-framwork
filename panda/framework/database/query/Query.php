@@ -134,7 +134,7 @@ class Query
     public function where($field, $exp = null, $value = null, $where = 'and')
     {
         if (is_array($field)) {
-            $this->dealWhereArray($field, $where);
+            $this->dealWhereArray($field);
         } else {
             $this->wheres[] = [
                 'field' => $field,
@@ -144,7 +144,7 @@ class Query
             ];
         }
         //绑定where的值到相应的binds中去，目的是实现pdo的参数绑定
-        $this->addBinds();
+        $this->addBinds($value,'wheres');
         return $this;
     }
 
@@ -154,14 +154,11 @@ class Query
      *      ['<',10,'or']
      * ]
      * $where['id'] = ['>','1']
-     *
      * $where[] = ['id','>',1]
-     *
      * 三种情况，
      *      第一种，key为字符串，且为二维数组
      *      第二种，key为字符串，且为一维数组
      *      第三种，key为数字，且为一维数组
-     *
      */
     /**
      * where条件为数组
@@ -186,10 +183,18 @@ class Query
 
     /**
      * 添加绑定，都是值
+     * @param $value
+     * @param $type
      */
-    public function addBinds()
+    public function addBinds($value,$type)
     {
-
+        var_dump($value);
+        if (is_array($value)){
+            $this->binds[$type] = array_values(array_merge($this->binds[$type], $value));
+        }else{
+            $this->binds[$type][] = $value;
+        }
+        var_dump($this->binds);
     }
 
     /**
