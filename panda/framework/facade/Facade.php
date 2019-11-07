@@ -2,7 +2,6 @@
 
 namespace Panda\facade;
 use Panda\container\Container;
-use Panda\database\query\Query;
 
 class Facade
 {
@@ -22,10 +21,14 @@ class Facade
             return static::$resolveFacade[$class];
         }
         $container =  Container::getInstance();
-        $instance = $container->instanceByClosure("Panda\\foundation\\".$class);
+        $instance = $container->instanceByClosure("Panda\\foundation\\".ucfirst($class));
         return $instance;
     }
 
+    /**
+     * 父类门面类
+     * @return string
+     */
     public static function getFacadeClass(){
         return 'panda/framework/facade/Facade.php:子类没有重写父类该方法';
     }

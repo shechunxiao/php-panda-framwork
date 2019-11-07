@@ -1,6 +1,7 @@
 <?php
 
 namespace Panda\foundation;
+
 use Panda\container\Container;
 use Panda\database\connector\CreateConnect;
 
@@ -35,11 +36,12 @@ class Db
      * @var CreateConnect
      */
     protected $createConnect;
+
     /**
      * 构造初始化
      * Db constructor.
      */
-    public function __construct(Container $container,CreateConnect $createConnect)
+    public function __construct(Container $container, CreateConnect $createConnect)
     {
         $this->container = $container;
         $this->createConnect = $createConnect;
@@ -47,41 +49,35 @@ class Db
 
     /**
      * 连接,这个连接可以调用相应的方法，比如field,select,first,where,value,whereOr等等,通过__call的启示，可以通过__call再次进行分发到query查询类中。
-     * 所有的核心资源是query，通过query的get等方法，触发解析等操作
+     * 所有的核心资源是query，通过query的get等方法，触发解析,执行sql语句等操作
      * 这个方法需要判断是否connect其他的数据库配置,从而实现数据库的切换
      */
-    public function connection(){
-        //先暂时不考虑这个connection是否重新连接的问题,也就是其他数据库配置的问题，先考虑如何实现query类的实例化
-        $type = $this->resolveType();
-        if ($this->connect[$type]){
-            return $this->connect[$type];
+    public function connection()
+    {
+        $type = $this->getConnectType();
+        if (!isset($this->connect[$type])) {
+            $this->connect[$type] = $this->createConnect->connect($type);
         }
-        $object = $this->createConnect->connect($type);
-        if ($object){
-            $this->connect[$type] = $object;
-        }
-        return $object;
+        return $this->connect[$type];
     }
 
     /**
      * 解析数据库类型
      */
-    public function resolveType(){
-        $databaseConfig = $this->container->getConfig()['database'];
-        $databaseEnv = env('DATABASE_TYPE');
-        return $type = $databaseEnv?:$databaseConfig['type'];
+    public function getConnectType()
+    {
+        $database = $this->container->getConfig()['database'];
+        return $database['type'] ?: '';
     }
 
     /**
-     * 通过这个魔术方法分发其他方法
-     * @param $name
+     * @param $method
      * @param $arguments
-     * @return $this
+     * @return mixed
      */
     public function __call($method, $arguments)
     {
-        $connection = $this->connection();
-        return $connection->$method(...$arguments);
+        return $this->connection()->$method(...$arguments);
     }
 
 }

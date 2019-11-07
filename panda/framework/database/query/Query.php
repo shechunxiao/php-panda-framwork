@@ -2,6 +2,7 @@
 
 namespace Panda\database\query;
 
+use Panda\container\Container;
 use Panda\database\builder\Builder;
 use Panda\database\connector\Connect;
 use Panda\database\execute\Execute;
@@ -13,6 +14,7 @@ class Query
      * @var
      */
     protected $pdo;
+    protected $container;
     /**
      * 某一类型的连接器对象，比如MysqlConnect
      * @var
@@ -87,6 +89,7 @@ class Query
      */
     public function __construct($connector)
     {
+        $this->container = new Container();
         $this->connector = $connector;
         $this->builder = new Builder();
         $this->execute = new Execute();
@@ -294,9 +297,10 @@ class Query
      */
     public function select($method = null)
     {
+        $config = $this->getConfig();
         //获取实例化的连接
         if (empty($this->pdo)) {
-            $this->pdo = $this->connector->getConnect();
+            $this->pdo = $this->connector->getConnect($config);
         }
 //        var_dump($this->pdo);
         //获取最终要执行的语句
@@ -318,6 +322,9 @@ class Query
         }
     }
 
+    public function getConfig(){
+       return isset($this->container->getConfig()['database'])?$this->container->getConfig()['database']:[];
+    }
     /**
      * 获取所有的变量
      */
