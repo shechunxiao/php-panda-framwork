@@ -110,69 +110,6 @@ class Query
         return $this;
     }
 
-//    /**
-//     * 聚合函数操作,直接执行相应的查询了
-//     * @param $operate
-//     * @param null $parameter
-//     * @return $this
-//     */
-//    public function aggregate($operate, $parameter = null)
-//    {
-//        $this->aggregate['operate'] = $operate;
-//        $this->aggregate['parameter'] = $parameter;
-//        return $this;
-//    }
-//
-//    /**
-//     * 统计
-//     * @param null $parameter
-//     * @return $this
-//     */
-//    public function count($parameter = null)
-//    {
-//        return $this->aggregate('count', $parameter);
-//    }
-//
-//    /**
-//     * 最大
-//     * @param null $parameter
-//     * @return $this
-//     */
-//    public function max($parameter = null)
-//    {
-//        return $this->aggregate('max', $parameter);
-//    }
-//
-//    /**
-//     * 最小
-//     * @param null $parameter
-//     * @return $this
-//     */
-//    public function min($parameter = null)
-//    {
-//        return $this->aggregate('min', $parameter);
-//    }
-//
-//    /**
-//     * 平均
-//     * @param null $parameter
-//     * @return $this
-//     */
-//    public function avg($parameter = null)
-//    {
-//        return $this->aggregate('avg', $parameter);
-//    }
-//
-//    /**
-//     * 求和
-//     * @param null $parameter
-//     * @return $this
-//     */
-//    public function sum($parameter = null)
-//    {
-//        return $this->aggregate('sum', $parameter);
-//    }
-
     /**
      * 字段(数组是为了后面处理加``)
      * @param array $parameter
@@ -259,21 +196,23 @@ class Query
 
     /**
      * 分组group by
-     * @param $parameter
+     * @param array $parameters
      * @return $this
      */
-    public function group($parameter)
+    public function group(...$parameters)
     {
-        if (is_array($parameter)) {
-            $this->groups = join(',', $parameter);
-        } else {
-            $this->groups = $parameter;
+        foreach ($parameters as $parameter) {
+            $this->groups[] = $parameter;
         }
         return $this;
     }
 
     /**
      * having条件
+     * @param $field
+     * @param string $exp
+     * @param string $value
+     * @return Query
      */
     public function having($field, $exp = '', $value = '')
     {
