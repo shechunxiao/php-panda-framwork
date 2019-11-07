@@ -128,16 +128,73 @@ class Query
      * @param $field
      * @param $exp
      * @param $value
+     * @param string $where
      * @return $this
      */
-    public function where($field, $exp = '', $value = '')
+    public function where($field, $exp = null, $value = null, $where = 'and')
     {
-        if (is_array($field)) { //直接就规定只能是二维数组
-            $this->wheres = array_merge($this->wheres, $field);
+        if (is_array($field)) {
+            $this->dealWhereArray($field, $where);
         } else {
-            $this->wheres[] = [$field, $exp, $value];
+            $this->wheres[] = [
+                'field' => $field,
+                'exp' => $exp,
+                'value' => $value,
+                'where' => $where
+            ];
         }
+        //绑定where的值到相应的binds中去，目的是实现pdo的参数绑定
+        $this->addBinds();
         return $this;
+    }
+
+    /**
+     * $where['id'] = [
+     *      ['>',1,'and'],
+     *      ['<',10,'or']
+     * ]
+     * $where[] = [
+     *      ['id','>',1],
+     *      ['id','<',10],
+     * ]
+     *
+     * $where[] = ['id','>',1]
+     *
+     */
+    /**
+     * where条件为数组
+     * @param $fields
+     * @param $where
+     */
+    public function dealWhereArray($fields, $where)
+    {
+        foreach ($fields as $key=>$value){
+            if (is_numeric($key) && is_array($value)){//key为数字
+               
+            }else{//key不为数字，如id,name等字段名
+
+            }
+        }
+    }
+
+    /**
+     * 添加绑定，都是值
+     */
+    public function addBinds()
+    {
+
+    }
+
+    /**
+     * whereOr查询
+     * @param $field
+     * @param null $exp
+     * @param null $value
+     * @return $this
+     */
+    public function whereOr($field, $exp = null, $value = null)
+    {
+        return $this->where($field, $exp, $value, 'or');
     }
 
     /**
