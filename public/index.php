@@ -6,5 +6,5 @@ require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $app = new \Panda\foundation\Application(dirname(__DIR__));
 
-$data = \Panda\facade\Db::table('first')->select();
+$data = \Panda\facade\Db::table('first')->where('id','>',50)->select();
 var_dump($data);

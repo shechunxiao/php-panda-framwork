@@ -4,8 +4,6 @@ namespace Panda\database\query;
 
 use Panda\container\Container;
 use Panda\database\builder\Builder;
-use Panda\database\connector\Connect;
-use Panda\database\execute\Execute;
 
 class Query
 {
@@ -14,6 +12,10 @@ class Query
      * @var
      */
     protected $pdo;
+    /**
+     * 容器，为了获取database的配置参数
+     * @var Container
+     */
     protected $container;
     /**
      * 某一类型的连接器对象，比如MysqlConnect
@@ -21,16 +23,20 @@ class Query
      */
     protected $connector;
     /**
-     * 执行sql的类
-     * @var Builder
-     */
-    protected $execute;
-    /**
      * 构建sql的类
      * @var Builder
      */
     protected $builder;
-
+    /**
+     * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定
+     * @var array
+     */
+    protected $binds = [
+        'joins' => [],
+        'wheres' => [],
+        'orders' => [],
+        'havings' => [],
+    ];
     /**
      * 用于操作的表名
      * @var
@@ -72,12 +78,12 @@ class Query
      */
     protected $orders;
     /**
-     *  限制数量
+     *限制数量
      * @var
      */
     protected $limit;
     /**
-     *  偏移
+     *偏移
      * @var
      */
     protected $offset;
@@ -89,96 +95,92 @@ class Query
      */
     public function __construct($connector)
     {
-        $this->container = new Container();
         $this->connector = $connector;
+        $this->container = new Container();
         $this->builder = new Builder();
-        $this->execute = new Execute();
     }
 
     /**
      * 表名
      * @return $this
      */
-    public function table($table)
+    public function table($name)
     {
-        $this->table = $table;
+        $this->table = $name;
         return $this;
     }
 
-    /**
-     * 聚合函数操作,直接执行相应的查询了
-     * @param $operate
-     * @param null $parameter
-     * @return $this
-     */
-    public function aggregate($operate, $parameter = null)
-    {
-        $this->aggregate['operate'] = $operate;
-        $this->aggregate['parameter'] = $parameter;
-        return $this;
-    }
+//    /**
+//     * 聚合函数操作,直接执行相应的查询了
+//     * @param $operate
+//     * @param null $parameter
+//     * @return $this
+//     */
+//    public function aggregate($operate, $parameter = null)
+//    {
+//        $this->aggregate['operate'] = $operate;
+//        $this->aggregate['parameter'] = $parameter;
+//        return $this;
+//    }
+//
+//    /**
+//     * 统计
+//     * @param null $parameter
+//     * @return $this
+//     */
+//    public function count($parameter = null)
+//    {
+//        return $this->aggregate('count', $parameter);
+//    }
+//
+//    /**
+//     * 最大
+//     * @param null $parameter
+//     * @return $this
+//     */
+//    public function max($parameter = null)
+//    {
+//        return $this->aggregate('max', $parameter);
+//    }
+//
+//    /**
+//     * 最小
+//     * @param null $parameter
+//     * @return $this
+//     */
+//    public function min($parameter = null)
+//    {
+//        return $this->aggregate('min', $parameter);
+//    }
+//
+//    /**
+//     * 平均
+//     * @param null $parameter
+//     * @return $this
+//     */
+//    public function avg($parameter = null)
+//    {
+//        return $this->aggregate('avg', $parameter);
+//    }
+//
+//    /**
+//     * 求和
+//     * @param null $parameter
+//     * @return $this
+//     */
+//    public function sum($parameter = null)
+//    {
+//        return $this->aggregate('sum', $parameter);
+//    }
 
     /**
-     * 统计
-     * @param null $parameter
-     * @return $this
-     */
-    public function count($parameter = null)
-    {
-        return $this->aggregate('count', $parameter);
-    }
-
-    /**
-     * 最大
-     * @param null $parameter
-     * @return $this
-     */
-    public function max($parameter = null)
-    {
-        return $this->aggregate('max', $parameter);
-    }
-
-    /**
-     * 最小
-     * @param null $parameter
-     * @return $this
-     */
-    public function min($parameter = null)
-    {
-        return $this->aggregate('min', $parameter);
-    }
-
-    /**
-     * 平均
-     * @param null $parameter
-     * @return $this
-     */
-    public function avg($parameter = null)
-    {
-        return $this->aggregate('avg', $parameter);
-    }
-
-    /**
-     * 求和
-     * @param null $parameter
-     * @return $this
-     */
-    public function sum($parameter = null)
-    {
-        return $this->aggregate('sum', $parameter);
-    }
-
-    /**
-     * 字段
+     * 字段(数组是为了后面处理加``)
      * @param array $parameter
      * @return $this
      */
-    public function field($parameter = [])
+    public function field($parameter = ['*'])
     {
-        if (is_array($parameter)) {
-            $parameter = join(',', $parameter);
-        }
-        $this->fields = $parameter;
+        $this->fields = is_array($parameter) ? $parameter : func_get_args();
         return $this;
     }
 
@@ -201,16 +203,16 @@ class Query
 
     /**
      * 排序
-     * @param $parameter
+     * @param $field
+     * @param string $direction
      * @return $this
      */
-    public function orders($parameter)
+    public function orders($field, $direction = 'asc')
     {
-        if (is_array($parameter)) {
-            $this->orders = join(',', $parameter);
-        } else {
-            $this->orders = $parameter;
-        }
+        $this->orders[] = [
+            'field' => $field,
+            'direction' => strtolower($direction) == 'asc' ? 'asc' : 'desc'
+        ];
         return $this;
     }
 
@@ -219,9 +221,9 @@ class Query
      * @param int $parameter
      * @return $this
      */
-    public function offset($parameter = 0)
+    public function offset($parameter)
     {
-        $this->offset = $parameter;
+        $this->offset = max(0, $parameter);
         return $this;
     }
 
@@ -293,38 +295,35 @@ class Query
      */
 
     /**
-     * 查询全部
+     * 获取pdo连接
+     * @return mixed
      */
-    public function select($method = null)
+    public function getPdo()
     {
-        $config = $this->getConfig();
-        //获取实例化的连接
         if (empty($this->pdo)) {
-            $this->pdo = $this->connector->getConnect($config);
+            return $this->pdo = $this->connector->getConnect($this->getConfig());
         }
-//        var_dump($this->pdo);
-        //获取最终要执行的语句
-        if (is_null($method)) {
-            $method = __FUNCTION__;
-        }
-        $arguments = $this->resolveParams();
-        $sql = $this->builder->getSql($arguments, $method);
-        try {
-            $PDOStatement = $this->pdo->query($sql);
-            $result = $PDOStatement->fetchAll();
-            return $result;
-        } catch (\PDOException $e) {
-            //这个地方需要限制次数,如果不加限制，就死循环了
-//            $this->flush()->$method();
-            var_dump($sql);
-            echo $e->getLine() . '/' . $e->getMessage();
-            die();
-        }
+        return $this->pdo;
     }
 
-    public function getConfig(){
-       return isset($this->container->getConfig()['database'])?$this->container->getConfig()['database']:[];
+    /**
+     * 获取database配置文件
+     * @return array
+     */
+    public function getConfig()
+    {
+        return isset($this->container->getConfig()['database']) ? $this->container->getConfig()['database'] : [];
     }
+
+    /**
+     * 获取sql语句
+     * @return string
+     */
+    public function getSql()
+    {
+        return $this->builder->getSql($this);
+    }
+
     /**
      * 获取所有的变量
      */
@@ -353,6 +352,31 @@ class Query
     }
 
     /**
+     * 查询全部
+     */
+    public function select($method = null)
+    {
+        $pdo = $this->getPdo();
+        //获取最终要执行的语句
+        if (is_null($method)) {
+            $method = __FUNCTION__;
+        }
+        $arguments = $this->resolveParams();
+        $sql = $this->builder->getSql($arguments, $method);
+        try {
+            $PDOStatement = $pdo->query($sql);
+            $result = $PDOStatement->fetchAll();
+            return $result;
+        } catch (\PDOException $e) {
+            //这个地方需要限制次数,如果不加限制，就死循环了
+//            $this->flush()->$method();
+            var_dump($sql);
+            echo $e->getLine() . '/' . $e->getMessage();
+            die();
+        }
+    }
+
+    /**
      * 查询一条语句（limit 1）
      */
     public function first()
@@ -365,17 +389,13 @@ class Query
      */
     public function update($data)
     {
-        //获取实例化的连接
-        if (empty($this->pdo)) {
-            $this->pdo = $this->connector->getConnect();
-        }
-//        var_dump($this->pdo);die();
+        $pdo = $this->getPdo();
         //获取最终要执行的语句
         $method = __FUNCTION__;
         $arguments = $this->resolveParams();
         $sql = $this->builder->getSql($arguments, $method, $data);
         try {
-            $result = $this->pdo->exec($sql);
+            $result = $pdo->exec($sql);
             return $result;
         } catch (\PDOException $e) {
             var_dump($sql);
@@ -389,17 +409,13 @@ class Query
      */
     public function delete()
     {
-        //获取实例化的连接
-        if (empty($this->pdo)) {
-            $this->pdo = $this->connector->getConnect();
-        }
-//        var_dump($this->pdo);die();
+        $pdo = $this->getPdo();
         //获取最终要执行的语句
         $method = __FUNCTION__;
         $arguments = $this->resolveParams();
         $sql = $this->builder->getSql($arguments, $method);
         try {
-            $result = $this->pdo->exec($sql);
+            $result = $pdo->exec($sql);
             return $result;
         } catch (\PDOException $e) {
             var_dump($sql);
@@ -413,18 +429,14 @@ class Query
      */
     public function insert($data)
     {
-        //获取实例化的连接
-        if (empty($this->pdo)) {
-            $this->pdo = $this->connector->getConnect();
-        }
-//        var_dump($this->pdo);die();
+        $pdo = $this->getPdo();
         //获取最终要执行的语句
         $method = __FUNCTION__;
         $arguments = $this->resolveParams();
         $sql = $this->builder->getSql($arguments, $method, $data);
 //        var_dump($sql);die();
         try {
-            $result = $this->pdo->exec($sql);
+            $result = $pdo->exec($sql);
             return $result;
         } catch (\PDOException $e) {
             var_dump($sql);

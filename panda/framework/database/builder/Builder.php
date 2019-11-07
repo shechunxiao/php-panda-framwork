@@ -16,7 +16,7 @@ class Builder
     protected $sqlOrders = [
         'aggregate',
         'fields',
-        'from',
+        'table',
         'joins',
         'wheres',
         'groups',
