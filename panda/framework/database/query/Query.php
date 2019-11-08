@@ -88,7 +88,6 @@ class Query
      */
     protected $offset;
 
-
     /**
      * 构造函数
      * Query constructor.
@@ -342,32 +341,6 @@ class Query
         return isset($this->container->getConfig()['database']) ? $this->container->getConfig()['database'] : [];
     }
 
-    /**
-     * 获取sql语句
-     * @return string
-     */
-    public function getSql()
-    {
-        return $this->builder->getSql($this);
-    }
-
-    /**
-     * 获取所有的变量
-     */
-    public function resolveParams()
-    {
-        return [
-            'fields' => $this->fields,
-            'table' => $this->table,
-            'joins' => $this->joins,
-            'wheres' => $this->wheres,
-            'groups' => $this->groups,
-            'havings' => $this->havings,
-            'orders' => $this->orders,
-            'limit' => $this->limit,
-            'offset' => $this->offset
-        ];
-    }
 
     /**
      * 清除pdo
@@ -379,56 +352,11 @@ class Query
     }
 
     /**
-     * 查询全部
+     * 增加
      */
-    public function select($method = null)
+    public function insert()
     {
-        $pdo = $this->getPdo();
-        //获取最终要执行的语句
-        if (is_null($method)) {
-            $method = __FUNCTION__;
-        }
-        $arguments = $this->resolveParams();
-        $sql = $this->builder->getSql($arguments, $method);
-        try {
-            $PDOStatement = $pdo->query($sql);
-            $result = $PDOStatement->fetchAll();
-            return $result;
-        } catch (\PDOException $e) {
-            //这个地方需要限制次数,如果不加限制，就死循环了
-//            $this->flush()->$method();
-            var_dump($sql);
-            echo $e->getLine() . '/' . $e->getMessage();
-            die();
-        }
-    }
 
-    /**
-     * 查询一条语句（limit 1）
-     */
-    public function first()
-    {
-        return $this->select('first');
-    }
-
-    /**
-     * 更新
-     */
-    public function update($data)
-    {
-        $pdo = $this->getPdo();
-        //获取最终要执行的语句
-        $method = __FUNCTION__;
-        $arguments = $this->resolveParams();
-        $sql = $this->builder->getSql($arguments, $method, $data);
-        try {
-            $result = $pdo->exec($sql);
-            return $result;
-        } catch (\PDOException $e) {
-            var_dump($sql);
-            echo $e->getLine() . '/' . $e->getMessage();
-            die();
-        }
     }
 
     /**
@@ -436,40 +364,141 @@ class Query
      */
     public function delete()
     {
-        $pdo = $this->getPdo();
-        //获取最终要执行的语句
-        $method = __FUNCTION__;
-        $arguments = $this->resolveParams();
-        $sql = $this->builder->getSql($arguments, $method);
-        try {
-            $result = $pdo->exec($sql);
-            return $result;
-        } catch (\PDOException $e) {
-            var_dump($sql);
-            echo $e->getLine() . '/' . $e->getMessage();
-            die();
-        }
+
     }
 
     /**
-     * 添加
+     * 改
      */
-    public function insert($data)
+    public function update()
     {
-        $pdo = $this->getPdo();
-        //获取最终要执行的语句
-        $method = __FUNCTION__;
-        $arguments = $this->resolveParams();
-        $sql = $this->builder->getSql($arguments, $method, $data);
-//        var_dump($sql);die();
-        try {
-            $result = $pdo->exec($sql);
-            return $result;
-        } catch (\PDOException $e) {
-            var_dump($sql);
-            echo $e->getLine() . '/' . $e->getMessage();
-            die();
-        }
+
     }
+
+    /**
+     * 查询多条语句
+     */
+    public function select()
+    {
+        echo 'select';
+    }
+
+    /**
+     * 查询单条语句
+     */
+    public function first()
+    {
+
+    }
+
+    /**
+     * 获取某一列
+     */
+    public function columns()
+    {
+
+    }
+
+    /**
+     * 获取某一条记录的某一个值
+     */
+    public function value()
+    {
+
+    }
+
+//    /**
+//     * 查询全部
+//     */
+//    public function select($method = null)
+//    {
+//        $pdo = $this->getPdo();
+//        //获取最终要执行的语句
+//        if (is_null($method)) {
+//            $method = __FUNCTION__;
+//        }
+//        $arguments = $this->resolveParams();
+//        $sql = $this->builder->getSql($arguments, $method);
+//        try {
+//            $PDOStatement = $pdo->query($sql);
+//            $result = $PDOStatement->fetchAll();
+//            return $result;
+//        } catch (\PDOException $e) {
+//            //这个地方需要限制次数,如果不加限制，就死循环了
+////            $this->flush()->$method();
+//            var_dump($sql);
+//            echo $e->getLine() . '/' . $e->getMessage();
+//            die();
+//        }
+//    }
+//
+//    /**
+//     * 查询一条语句（limit 1）
+//     */
+//    public function first()
+//    {
+//        return $this->select('first');
+//    }
+//
+//    /**
+//     * 更新
+//     */
+//    public function update($data)
+//    {
+//        $pdo = $this->getPdo();
+//        //获取最终要执行的语句
+//        $method = __FUNCTION__;
+//        $arguments = $this->resolveParams();
+//        $sql = $this->builder->getSql($arguments, $method, $data);
+//        try {
+//            $result = $pdo->exec($sql);
+//            return $result;
+//        } catch (\PDOException $e) {
+//            var_dump($sql);
+//            echo $e->getLine() . '/' . $e->getMessage();
+//            die();
+//        }
+//    }
+//
+//    /**
+//     * 删除
+//     */
+//    public function delete()
+//    {
+//        $pdo = $this->getPdo();
+//        //获取最终要执行的语句
+//        $method = __FUNCTION__;
+//        $arguments = $this->resolveParams();
+//        $sql = $this->builder->getSql($arguments, $method);
+//        try {
+//            $result = $pdo->exec($sql);
+//            return $result;
+//        } catch (\PDOException $e) {
+//            var_dump($sql);
+//            echo $e->getLine() . '/' . $e->getMessage();
+//            die();
+//        }
+//    }
+//
+//    /**
+//     * 添加
+//     */
+//    public function insert($data)
+//    {
+//        $pdo = $this->getPdo();
+//        //获取最终要执行的语句
+//        $method = __FUNCTION__;
+//        $arguments = $this->resolveParams();
+//        $sql = $this->builder->getSql($arguments, $method, $data);
+////        var_dump($sql);die();
+//        try {
+//            $result = $pdo->exec($sql);
+//            return $result;
+//        } catch (\PDOException $e) {
+//            var_dump($sql);
+//            echo $e->getLine() . '/' . $e->getMessage();
+//            die();
+//        }
+//    }
 
 }
