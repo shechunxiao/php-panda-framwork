@@ -24,7 +24,7 @@ $where3['last'] = [
 //->where($where)
 //where($where2)
 //->where($where3)
-$data = \Panda\facade\Db::table('first')->where($where2)->where($where3)->whereOr('inner','>',1)->select();
+$data = \Panda\facade\Db::table('first')->field('id','inter')->where($where2)->where($where3)->whereOr('inner','>',1)->select();
 //var_dump($data);
 
 

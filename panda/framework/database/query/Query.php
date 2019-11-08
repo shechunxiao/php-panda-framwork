@@ -31,7 +31,7 @@ class Query
      * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定
      * @var array
      */
-    protected $binds = [
+    public $binds = [
 //        'joins' => [],
         'wheres' => [],
 //        'orders' => [],
@@ -41,52 +41,52 @@ class Query
      * 用于操作的表名
      * @var
      */
-    protected $table;
+    public $table;
     /**
      * 聚合函数
      * @var
      */
-    protected $aggregate;
+    public $aggregate;
     /**
      *  字段
      * @var
      */
-    protected $fields;
+    public $fields;
     /**
      * 关联查询
      * @var
      */
-    protected $joins;
+    public $joins;
     /**
      *  条件
      * @var
      */
-    protected $wheres = [];
+    public $wheres = [];
     /**
      * 分组
      * @var array
      */
-    protected $groups;
+    public $groups;
     /**
      * having条件
      * @var
      */
-    protected $havings = [];
+    public $havings = [];
     /**
      * 排序
      * @var
      */
-    protected $orders;
+    public $orders;
     /**
      *限制数量
      * @var
      */
-    protected $limit;
+    public $limit;
     /**
      *偏移
      * @var
      */
-    protected $offset;
+    public $offset;
 
     /**
      * 构造函数
@@ -364,7 +364,7 @@ class Query
      */
     public function delete()
     {
-
+        echo '12312321';
     }
 
     /**
@@ -380,7 +380,8 @@ class Query
      */
     public function select()
     {
-        echo 'select';
+        $sql = $this->builder->sqlForSelect($this);
+        var_dump($sql);
     }
 
     /**
