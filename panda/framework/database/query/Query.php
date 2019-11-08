@@ -32,9 +32,9 @@ class Query
      * @var array
      */
     protected $binds = [
-        'joins' => [],
+//        'joins' => [],
         'wheres' => [],
-        'orders' => [],
+//        'orders' => [],
         'havings' => [],
     ];
     /**
@@ -145,8 +145,6 @@ class Query
             //绑定where的值到相应的binds中去，目的是实现pdo的参数绑定
             $this->addBinds($value, 'wheres');
         }
-//        var_dump($this->wheres);
-//        var_dump($this->binds);
         return $this;
     }
 
@@ -299,15 +297,18 @@ class Query
      * @param $field
      * @param string $exp
      * @param string $value
+     * @param string $where
      * @return Query
      */
-    public function having($field, $exp = '', $value = '')
+    public function having($field, $exp = null, $value = null, $where = 'and')
     {
-        if (is_array($field)) { //直接就规定只能是二维数组
-            $this->havings = array_merge($this->wheres, $field);
-        } else {
-            $this->havings[] = [$field, $exp, $value];
-        }
+        $this->havings[] = [
+            'field' => $field,
+            'exp' => $exp,
+            'value' => $value,
+            'where' => $where
+        ];
+        $this->addBinds($value, 'havings');
         return $this;
     }
     /**
