@@ -70,6 +70,8 @@ class Builder
 
     /**
      * 根据sql排序处理
+     * @param $query
+     * @return array
      */
     public function dealSqlOrders($query)
     {
@@ -89,20 +91,31 @@ class Builder
      */
     public function escapeValue($value)
     {
-        if (($pos = $this->posProcessAs($value)) != false) {
-            return $pos;
+        if ($this->isProcessAs($value)) {
+            return $this->buildAsValue($value);
         }
         return $this->escapeValueNoAs($value);
     }
 
     /**
-     * 判断$value中的as的位置
+     * 重新构建拥有as的值
+     * @param $value
+     * @return int
+     */
+    public function buildAsValue($value)
+    {
+        $split = preg_split('/\sas\s/', $value);
+        return $this->escapeValueNoAs($split[0]) . ' as ' . $split[1];
+    }
+
+    /**
+     * 判断是否有as等
      * @param $value
      * @return bool
      */
-    public function posProcessAs($value)
+    public function isProcessAs($value)
     {
-        return strpos($value, 'as');
+        return strstr($value, 'as') ? true : false;
     }
 
     /**
@@ -161,9 +174,20 @@ class Builder
     {
         $joinString = '';
         foreach ($item as $join) {
-            $joinString .= $join['type'] . ' join ' . $this->escapeValue($join['table']) . ' on ' . $join['first'] . '=' . $join['second'];
+            $joinString .= $join['type'] . ' join ' . $this->escapeValue($join['table']) . ' on ' . $this->pointDeal($join['first']) . '=' . $this->pointDeal($join['second']);
         }
         return $joinString;
+    }
+
+    /**
+     * 解析表名.字段
+     * @param $value
+     * @return string
+     */
+    public function pointDeal($value)
+    {
+        $value = explode('.', $value);
+        return $value[0] .'.'. $this->escapeValueNoAs($value[1]);
     }
 
     /**
@@ -172,7 +196,17 @@ class Builder
      */
     public function wheresResolve($item)
     {
+        $wheres = [];
+        foreach ($item as $value){
+            if (is_array($value)){
+                foreach ($value as $v){
 
+                }
+            }
+            $wheres[] = "{$value['where']} {$this->escapeValue($value['field'])}{$value['exp']} ? ";
+        }
+        var_dump($item);
+        var_dump($wheres);
     }
 
     /**
