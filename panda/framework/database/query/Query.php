@@ -194,7 +194,7 @@ class Query
         }else{
             $this->binds[$type][] = $value;
         }
-        var_dump($this->binds);
+//        var_dump($this->binds);
     }
 
     /**
