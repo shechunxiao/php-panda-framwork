@@ -142,9 +142,11 @@ class Query
                 'value' => $value,
                 'where' => $where
             ];
+            //绑定where的值到相应的binds中去，目的是实现pdo的参数绑定
+            $this->addBinds($value, 'wheres');
         }
-        //绑定where的值到相应的binds中去，目的是实现pdo的参数绑定
-        $this->addBinds($value,'wheres');
+//        var_dump($this->wheres);
+//        var_dump($this->binds);
         return $this;
     }
 
@@ -168,15 +170,15 @@ class Query
     {
         foreach ($fields as $key => $value) {
             $isOneLevel = true;
-            if (count($value) != count($value,COUNT_RECURSIVE)){
+            if (count($value) != count($value, COUNT_RECURSIVE)) {
                 $isOneLevel = false;
             }
-            if (is_numeric($key) && $isOneLevel){ //key为数字，且为一维数组
+            if (is_numeric($key) && $isOneLevel) { //key为数字，且为一维数组
                 $this->where(...array_values($value));
-            }elseif (!is_numeric($key) && $isOneLevel){//key为字符串，且为一维数组
-                $this->where($key,...array_values($value));
-            }elseif (!is_numeric($key) && !$isOneLevel){//key为字符串，且为二维数组
-                $this->where($key,'=',$value);
+            } elseif (!is_numeric($key) && $isOneLevel) {//key为字符串，且为一维数组
+                $this->where($key, ...array_values($value));
+            } elseif (!is_numeric($key) && !$isOneLevel) {//key为字符串，且为二维数组
+                $this->where($key, '=', $value);
             }
         }
     }
@@ -186,15 +188,27 @@ class Query
      * @param $value
      * @param $type
      */
-    public function addBinds($value,$type)
+    public function addBinds($value, $type)
     {
-        var_dump($value);
-        if (is_array($value)){
+        $isOneLevel = true;
+        if (count($value) != count($value, COUNT_RECURSIVE)) {
+            $isOneLevel = false;
+        }
+        if (is_array($value) && $isOneLevel) {
             $this->binds[$type] = array_values(array_merge($this->binds[$type], $value));
-        }else{
+        } elseif (is_array($value) && !$isOneLevel) {
+            $bindArr = [];
+            foreach ($value as $K => $v) {
+                if (!isset($v[1])) {
+                    echo '缺少表达式符号，如>,=,<';
+                    die();
+                }
+                array_push($bindArr, $v[1]);
+            }
+            $this->binds[$type][] = $bindArr;
+        } else {
             $this->binds[$type][] = $value;
         }
-//        var_dump($this->binds);
     }
 
     /**

@@ -12,16 +12,20 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
 //    ['<',10,'or']
 //];
 //$where['id'] = ['>',1];
-$where[] = ['id','>',1];
-$where[] = ['name','=','张三'];
-$where2['test'] = ['>',100];
-$where3['last'] = [
-    ['>',11],
-    ['<',20,'or']
-];
-$data = \Panda\facade\Db::table('first')->where($where)->where($where2)->where($where3);
-//var_dump($data);
+$where[] = ['id', '>', 324232];
+$where[] = ['name', '=', '张三'];
+$where2['test'] = ['>', 100];
 
+$where3['last'] = [
+    ['>', 11],
+    ['<', 20, 'or']
+];
+//->where('id','>',1)
+//->where($where)
+//where($where2)
+//->where($where3)
+$data = \Panda\facade\Db::table('first')->where($where2)->where($where3);
+//var_dump($data);
 
 
 //var_dump($where1);
