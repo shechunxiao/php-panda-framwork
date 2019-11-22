@@ -36,11 +36,11 @@ class Builder
     /**
      * 查询sql
      * @param Query $query
-     * @return string
+     * @return array
      */
     public function sqlForSelect(Query $query)
     {
-        $sql = $this->dealSqlOrders($query);
+        return $this->dealSqlOrders($query);
     }
 
     /**
@@ -114,7 +114,7 @@ class Builder
      */
     public function isProcessAs($value)
     {
-        return strstr($value, 'as') ? true : false;
+        return strstr($value, ' as ') ? true : false;
     }
 
     /**
@@ -186,69 +186,138 @@ class Builder
     public function pointDeal($value)
     {
         $value = explode('.', $value);
-        return $value[0] .'.'. $this->escapeValueNoAs($value[1]);
+        return $value[0] . '.' . $this->escapeValueNoAs($value[1]);
     }
 
     /**
      * 解析where条件
      * @param $item
+     * @return string
      */
     public function wheresResolve($item)
     {
         $wheres = [];
-        foreach ($item as $value){
-            if (is_array($value)){
-                foreach ($value as $v){
-
+        foreach ($item as $value) {
+            if (is_array($value['value'])) {
+                $resolveValue = $this->resolveValue($value['value']);
+                $childWheres = [];
+                foreach ($resolveValue as $v) {
+                    $childWheres[] = "{$v['where']} {$this->escapeValue($value['field'])}{$v['exp']} ? ";
                 }
+                $wheres[] = $childWheres;
+                continue;
             }
             $wheres[] = "{$value['where']} {$this->escapeValue($value['field'])}{$value['exp']} ? ";
         }
+        return 'where '.$this->devLeftExp($this->resolveArrayJoint($wheres));
+    }
+
+    /**
+     * 如果解析出来是数组，调用该方法进行拼接
+     * @param array $array
+     * @param bool $hasBracket 是否一个字段条件
+     * @return string
+     */
+    public function resolveArrayJoint(array $array, $hasBracket = false)
+    {
+        $item = '';
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                $item .= static::resolveArrayJoint($value, true);
+            } else {
+                $item .= ' ' . $value;
+            }
+        }
+        if ($hasBracket) {
+            $item = 'and ('.$this->devLeftExp($item).')';
+        }
+        return $item;
+    }
+
+    /**
+     * 去除左边的连接符，and或者or
+     * @param string $string
+     * @return string|string[]|null
+     */
+    public function devLeftExp($string)
+    {
+        return preg_replace('/ and | or /','',$string,1);
     }
 
     /**
      * 解析groups
      * @param $item
+     * @return string
      */
     public function groupsResolve($item)
     {
-
+        $groups = '';
+        foreach ($item as $value){
+            $groups .= $value.',';
+        }
+        return 'group by '.trim($groups,',');
     }
 
     /**
      * 解析having条件
      * @param $item
+     * @return string
      */
     public function havingsResolve($item)
     {
-
+        return '';
     }
 
     /**
      * 解析排序
      * @param $item
+     * @return string
      */
     public function ordersResolve($item)
     {
-
+        $orders = '';
+        foreach ($item as $order){
+            $orders .= $order['field'].' '.$order['direction'].' , ';
+        }
+        return trim($orders,', ');
     }
 
     /**
      * 解析limit
      * @param $item
+     * @return mixed
      */
     public function limitResolve($item)
     {
-
+        return $item;
     }
 
     /**
      * 解析offset
      * @param $item
+     * @return mixed
      */
     public function offsetResolve($item)
     {
+        return $item;
+    }
 
+    /**
+     * 解析value
+     * @param array $array
+     * @return array
+     */
+    public function resolveValue(array $array)
+    {
+        $result = [];
+        foreach ($array as $value) {
+            $result[] = [
+                'exp' => $value[0],
+                'value' => $value[1],
+                'where' => !empty($value[2]) ? $value[2] : 'and',
+            ];
+        }
+        return $result;
     }
 
 
