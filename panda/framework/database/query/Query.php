@@ -370,9 +370,8 @@ class Query
     public function aggregate($name, $argument)
     {
         $this->aggregate = ['name' => $name, 'argument' => $argument];
-        $sql = $this->builder->sqlForSelect($this);
+        $sql = $this->builder->sqlForAggregate($this);
         var_dump($sql);
-        return 111;
     }
 
     /**

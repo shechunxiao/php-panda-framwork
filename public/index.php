@@ -60,6 +60,8 @@ $data = \Panda\facade\Db::table('first as f')->field('count(id) as mycount','int
     ->group('id','name')
     ->offset(10)
     ->limit(1)
+    ->having('id','>',1)
+    ->having('inter','=',1)
     ->max('id')
 //    ->select();
 //var_dump($data);

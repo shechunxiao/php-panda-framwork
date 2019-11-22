@@ -36,11 +36,26 @@ class Builder
     /**
      * 查询sql
      * @param Query $query
-     * @return array
+     * @return string
      */
     public function sqlForSelect(Query $query)
     {
-        return $this->dealSqlOrders($query);
+        $sql = $this->dealSqlOrders($query);
+        unset($sql['aggregate']);
+        return $this->sqlLastConcat($sql);
+    }
+
+    /**
+     * 聚合函数sql
+     * @param Query $query
+     * @return string
+     */
+    public function sqlForAggregate(Query $query)
+    {
+        $sql = $this->dealSqlOrders($query);
+        unset($sql['field']);
+        var_dump($sql);
+        return $this->sqlLastConcat($sql);
     }
 
     /**
@@ -137,7 +152,7 @@ class Builder
      */
     public function aggregateResolve($item)
     {
-        return 'select '.$item['name'].'('.$this->escapeValue($item['argument']).')';
+        return 'select ' . $item['name'] . '(' . $this->escapeValue($item['argument']) . ')';
     }
 
     /**
@@ -209,7 +224,7 @@ class Builder
             }
             $wheres[] = "{$value['where']} {$this->escapeValue($value['field'])}{$value['exp']} ? ";
         }
-        return 'where '.$this->devLeftExp($this->resolveArrayJoint($wheres));
+        return 'where ' . $this->devLeftExp($this->resolveArrayJoint($wheres));
     }
 
     /**
@@ -229,7 +244,7 @@ class Builder
             }
         }
         if ($hasBracket) {
-            $item = 'and ('.$this->devLeftExp($item).')';
+            $item = 'and (' . $this->devLeftExp($item) . ')';
         }
         return $item;
     }
@@ -241,7 +256,7 @@ class Builder
      */
     public function devLeftExp($string)
     {
-        return preg_replace('/ and | or /','',$string,1);
+        return preg_replace('/ and | or /', '', $string, 1);
     }
 
     /**
@@ -252,10 +267,10 @@ class Builder
     public function groupsResolve($item)
     {
         $groups = '';
-        foreach ($item as $value){
-            $groups .= $this->escapeValue($value).',';
+        foreach ($item as $value) {
+            $groups .= $this->escapeValue($value) . ',';
         }
-        return 'group by '.trim($groups,',');
+        return 'group by ' . trim($groups, ',');
     }
 
     /**
@@ -265,7 +280,11 @@ class Builder
      */
     public function havingsResolve($item)
     {
-        return '';
+        $havings = '';
+        foreach ($item as $value) {
+            $havings[] = "{$value['where']} {$this->escapeValue($value['field'])}{$value['exp']} ? ";
+        }
+        return 'having ' . $this->devLeftExp($this->resolveArrayJoint((array)$havings));
     }
 
     /**
@@ -276,10 +295,10 @@ class Builder
     public function ordersResolve($item)
     {
         $orders = '';
-        foreach ($item as $order){
-            $orders .= $this->escapeValue($order['field']).' '.$order['direction'].' , ';
+        foreach ($item as $order) {
+            $orders .= $this->escapeValue($order['field']) . ' ' . $order['direction'] . ' , ';
         }
-        return trim($orders,', ');
+        return trim($orders, ', ');
     }
 
     /**
@@ -318,6 +337,16 @@ class Builder
             ];
         }
         return $result;
+    }
+
+    /**
+     * sql语句最后的拼接
+     * @param $sql
+     * @return string
+     */
+    public function sqlLastConcat($sql)
+    {
+        return implode(' ', $sql);
     }
 
 
