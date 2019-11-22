@@ -283,11 +283,15 @@ class Builder
      */
     public function havingsResolve($item)
     {
-        $havings = '';
+        $havings = [];
         foreach ($item as $value) {
             $havings[] = "{$value['where']} {$this->escapeValue($value['field'])}{$value['exp']} ? ";
         }
-        return 'having ' . $this->devLeftExp($this->resolveArrayJoint((array)$havings));
+        if (!empty($havings = $this->devLeftExp($this->resolveArrayJoint((array)$havings)))){
+            return 'having ' . $havings;
+        }
+        return '';
+
     }
 
     /**

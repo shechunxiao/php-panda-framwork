@@ -50,21 +50,23 @@ $where3['last'] = [
 //->where($where)
 //where($where2)
 //->where($where3)
-$data = \Panda\facade\Db::table('first as f')->field('count(id) as mycount','inter')
-    ->join('first_extend as fe','fe.first_id','=','f.id','left')
-    ->where($where2)
-    ->where($where3)
-    ->whereOr('inner','>',1)
-    ->orders('id','Desc')
-    ->orders('inter','asc')
-    ->group('id','name')
-    ->offset(10)
-    ->limit(1)
-    ->having('id','>',1)
-    ->having('inter','=',1)
-    ->having('name','=',3)
-    ->max('id')
+//$data = \Panda\facade\Db::table('first as f')->field('count(id) as mycount','inter')
+//    ->join('first_extend as fe','fe.first_id','=','f.id','left')
+//    ->where($where2)
+//    ->where($where3)
+//    ->whereOr('inner','>',1)
+//    ->orders('id','Desc')
+//    ->orders('inter','asc')
+//    ->group('id','name')
+//    ->offset(10)
+//    ->limit(1)
+//    ->having('id','>',1)
+//    ->having('inter','=',1)
+//    ->having('name','=',3)
+////    ->max('id')
 //    ->select();
 //var_dump($data);
+$data = \Panda\facade\Db::table('test')->field('id','name')->where('id','>',2)->sum('id');
+var_dump($data);
 
 ;

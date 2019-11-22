@@ -4,6 +4,7 @@ namespace Panda\database\query;
 
 use Panda\container\Container;
 use Panda\database\builder\Builder;
+use Panda\database\execute\Execute;
 
 class Query
 {
@@ -11,22 +12,27 @@ class Query
      * pdo连接
      * @var
      */
-    protected $pdo;
+    public $pdo;
     /**
      * 容器，为了获取database的配置参数
      * @var Container
      */
-    protected $container;
+    public $container;
     /**
      * 某一类型的连接器对象，比如MysqlConnect
      * @var
      */
-    protected $connector;
+    public $connector;
     /**
      * 构建sql的类
      * @var Builder
      */
-    protected $builder;
+    public $builder;
+    /**
+     * 执行sql语句
+     * @var Execute
+     */
+    public $execute;
     /**
      * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定
      * @var array
@@ -98,6 +104,7 @@ class Query
         $this->connector = $connector;
         $this->container = new Container();
         $this->builder = new Builder();
+        $this->execute = new Execute();
     }
 
     /**
@@ -344,7 +351,7 @@ class Query
     /**
      * 总和
      * @param $argument
-     * @return int
+     * @return void
      */
     public function sum($argument)
     {
@@ -354,9 +361,9 @@ class Query
     /**
      * 统计
      * @param $argument
-     * @return int
+     * @return void
      */
-    public function count($argument)
+    public function count($argument='*')
     {
         return $this->aggregate('count', $argument);
     }
@@ -365,13 +372,13 @@ class Query
      * 聚合函数统一处理函数
      * @param $name
      * @param $argument
-     * @return int
+     * @return void
      */
     public function aggregate($name, $argument)
     {
         $this->aggregate = ['name' => $name, 'argument' => $argument];
         $sql = $this->builder->sqlForAggregate($this);
-
+        return $this->execute->runAggregate($this,$sql);
     }
 
     /**
@@ -445,7 +452,7 @@ class Query
     public function select()
     {
         $sql = $this->builder->sqlForSelect($this);
-        var_dump($sql);
+        return $this->execute->runSelect($this,$sql);
     }
 
     /**
