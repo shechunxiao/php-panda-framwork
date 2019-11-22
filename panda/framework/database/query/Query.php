@@ -310,6 +310,71 @@ class Query
         $this->addBinds($value, 'havings');
         return $this;
     }
+
+    /**
+     * 最大值
+     * @param $argument
+     * @return int
+     */
+    public function max($argument)
+    {
+        return $this->aggregate('max', $argument);
+    }
+
+    /**
+     * 最小值
+     * @param $argument
+     * @return int
+     */
+    public function min($argument)
+    {
+        return $this->aggregate('min', $argument);
+    }
+
+    /**
+     * 平均值
+     * @param $argument
+     * @return int
+     */
+    public function avg($argument)
+    {
+        return $this->aggregate('avg', $argument);
+    }
+
+    /**
+     * 总和
+     * @param $argument
+     * @return int
+     */
+    public function sum($argument)
+    {
+        return $this->aggregate('sum', $argument);
+    }
+
+    /**
+     * 统计
+     * @param $argument
+     * @return int
+     */
+    public function count($argument)
+    {
+        return $this->aggregate('count', $argument);
+    }
+
+    /**
+     * 聚合函数统一处理函数
+     * @param $name
+     * @param $argument
+     * @return int
+     */
+    public function aggregate($name, $argument)
+    {
+        $this->aggregate = ['name' => $name, 'argument' => $argument];
+        $sql = $this->builder->sqlForSelect($this);
+        var_dump($sql);
+        return 111;
+    }
+
     /**
      * 要想执行sql语句，需要以下几个步骤:
      *      1.获取PDO实例化连接(connector作用)
@@ -501,5 +566,6 @@ class Query
 //            die();
 //        }
 //    }
+
 
 }

@@ -133,11 +133,11 @@ class Builder
     /**
      * 解析聚合函数
      * @param $item
-     * @return int
+     * @return string
      */
-    public function aggregateResolve($item, $query)
+    public function aggregateResolve($item)
     {
-        return 111;
+        return 'select '.$item['name'].'('.$this->escapeValue($item['argument']).')';
     }
 
     /**
@@ -253,7 +253,7 @@ class Builder
     {
         $groups = '';
         foreach ($item as $value){
-            $groups .= $value.',';
+            $groups .= $this->escapeValue($value).',';
         }
         return 'group by '.trim($groups,',');
     }
@@ -277,7 +277,7 @@ class Builder
     {
         $orders = '';
         foreach ($item as $order){
-            $orders .= $order['field'].' '.$order['direction'].' , ';
+            $orders .= $this->escapeValue($order['field']).' '.$order['direction'].' , ';
         }
         return trim($orders,', ');
     }
