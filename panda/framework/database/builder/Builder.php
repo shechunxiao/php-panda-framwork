@@ -42,7 +42,9 @@ class Builder
     {
         $sql = $this->dealSqlOrders($query);
         unset($sql['aggregate']);
-        return $this->sqlLastConcat($sql);
+        if (!empty($sql)){
+            return $this->sqlLastConcat($sql);
+        }
     }
 
     /**
@@ -53,9 +55,10 @@ class Builder
     public function sqlForAggregate(Query $query)
     {
         $sql = $this->dealSqlOrders($query);
-        unset($sql['field']);
-        var_dump($sql);
-        return $this->sqlLastConcat($sql);
+        unset($sql['fields']);
+        if (!empty($sql)){
+            return $this->sqlLastConcat($sql);
+        }
     }
 
     /**

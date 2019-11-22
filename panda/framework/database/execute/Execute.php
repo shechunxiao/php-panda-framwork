@@ -4,6 +4,11 @@ namespace Panda\database\execute;
 class Execute
 {
     /**
+     * 结果集查询
+     * @var
+     */
+    protected $result;
+    /**
      * select查询
      */
     public function select()
@@ -55,6 +60,13 @@ class Execute
      */
     public function delete()
     {
+
+    }
+
+    /**
+     * 执行select查询
+     */
+    public function runSelect(){
 
     }
 

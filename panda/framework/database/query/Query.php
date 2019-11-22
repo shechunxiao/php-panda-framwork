@@ -371,7 +371,7 @@ class Query
     {
         $this->aggregate = ['name' => $name, 'argument' => $argument];
         $sql = $this->builder->sqlForAggregate($this);
-        var_dump($sql);
+
     }
 
     /**
