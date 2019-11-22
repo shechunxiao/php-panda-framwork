@@ -41,7 +41,6 @@ class Builder
     public function sqlForSelect(Query $query)
     {
         $sql = $this->dealSqlOrders($query);
-        var_dump($sql);
     }
 
     /**
@@ -205,8 +204,6 @@ class Builder
             }
             $wheres[] = "{$value['where']} {$this->escapeValue($value['field'])}{$value['exp']} ? ";
         }
-        var_dump($item);
-        var_dump($wheres);
     }
 
     /**

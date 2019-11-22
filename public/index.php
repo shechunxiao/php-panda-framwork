@@ -51,8 +51,9 @@ $where3['last'] = [
 //where($where2)
 //->where($where3)
 $data = \Panda\facade\Db::table('first as f')->field('count(id) as mycount','inter')
-    ->join('first_extend as fe','fe.first_id','=','f.id','left')
-    ->where($where2)->where($where3)->whereOr('inner','>',1)->select();
+//    ->join('first_extend as fe','fe.first_id','=','f.id','left')
+//    ->where($where2)->where($where3)->whereOr('inner','>',1)
+    ->select();
 //var_dump($data);
 
 ;
