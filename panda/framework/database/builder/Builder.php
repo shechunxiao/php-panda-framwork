@@ -64,7 +64,7 @@ class Builder
     /**
      * 更新sql
      */
-    public function sqlForUpdate()
+    public function sqlForUpdate(Query $query)
     {
 
     }
@@ -72,17 +72,21 @@ class Builder
     /**
      * 增加sql
      */
-    public function sqlForInsert()
+    public function sqlForInsert(Query $query)
     {
-
+        $sql = $this->dealSqlInsert($query);
+        return $this->sqlLastConcat($sql);
     }
 
     /**
      * 删除sql
+     * @param Query $query
+     * @return string
      */
-    public function sqlForDelete()
+    public function sqlForDelete(Query $query)
     {
-
+        $sql = $this->dealSqlDelete($query);
+        return $this->sqlLastConcat($sql);
     }
 
     /**
@@ -98,6 +102,31 @@ class Builder
                 $sql[$item] = $this->{$item . 'Resolve'}($query->$item, $query);
             }
         }
+        return $sql;
+    }
+
+    /**
+     * 获取delete的sql语句
+     * @param $query
+     * @return mixed
+     */
+    public function dealSqlDelete($query)
+    {
+        $sql['table'] = 'delete ' . $this->tableResolve($query->table);
+        $sql['wheres'] = $this->wheresResolve($query->wheres);
+        return $sql;
+    }
+
+    /**
+     * 获取insert的sql语句
+     * @param $query
+     * @return mixed
+     */
+    public function dealSqlInsert($query)
+    {
+        $sql['table'] = 'insert into ' . $this->escapeValue($query->table);
+        $sql['keys'] = $this->insertResolve($query->data)['keys'];
+        $sql['values'] = $this->insertResolve($query->data)['values'];
         return $sql;
     }
 
@@ -325,6 +354,13 @@ class Builder
     public function offsetResolve($item)
     {
         return 'offset ' . $item;
+    }
+
+    public function insertResolve($data)
+    {
+        $keys = implode(',', $this->escapeValue(array_keys($data)));
+        $values = implode(',', array_values($data));
+        return ['keys' => $keys, 'values' => $values];
     }
 
     /**

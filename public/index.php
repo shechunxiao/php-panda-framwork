@@ -67,7 +67,13 @@ $where3['last'] = [
 //    ->select();
 //var_dump($data);
 //$data = \Panda\facade\Db::table('test')->field('id','name')->where('id','>',2)->sum('id');
-$data = \Panda\facade\Db::table('first')->field('id','name')->where('id','>',42)->first();
+//$data = \Panda\facade\Db::table('first')->where('id','>',42)->value('id');
+//$data = \Panda\facade\Db::table('first')->where('id','=',43)->where('name','=',1)->delete();
+$insert = [
+    'name'=>'插入数据',
+    'inter'=>14
+];
+$data = \Panda\facade\Db::table('first')->insert($insert);
 var_dump($data);
 
 ;

@@ -33,6 +33,12 @@ class Query
      * @var Execute
      */
     public $execute;
+
+    /**
+     * 需要插入的数据
+     * @var
+     */
+    public $data = [];
     /**
      * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定
      * @var array
@@ -425,9 +431,11 @@ class Query
     /**
      * 增加
      */
-    public function insert()
+    public function insert($data)
     {
-
+        $this->data = $data;
+        $sql = $this->builder->sqlForInsert($this);
+        var_dump($sql);
     }
 
     /**
@@ -435,7 +443,8 @@ class Query
      */
     public function delete()
     {
-        echo '12312321';
+        $sql = $this->builder->sqlForDelete($this);
+        return $this->execute->delete($this,$sql);
     }
 
     /**
@@ -452,7 +461,6 @@ class Query
     public function select()
     {
         $sql = $this->builder->sqlForSelect($this);
-        var_dump($sql);
         return $this->execute->runSelect($this, $sql);
     }
 
@@ -462,23 +470,29 @@ class Query
     public function first()
     {
         $this->limit(1);
-        return $this->select();
+        $sql = $this->builder->sqlForSelect($this);
+        return $this->execute->first($this, $sql);
     }
 
     /**
      * 获取某一列
+     * @param array $parameters
+     * @return array
      */
-    public function columns()
+    public function columns($parameters)
     {
-
+        $sql = $this->builder->sqlForSelect($this);
+        return $this->execute->columns($this, $sql,$parameters);
     }
 
     /**
      * 获取某一条记录的某一个值
+     * @param null $field
+     * @return
      */
-    public function value()
+    public function value($field=null)
     {
-
+        return $this->first()[$field];
     }
 
 //    /**
