@@ -29,6 +29,40 @@ class Execute
     }
 
     /**
+     * 添加数据
+     * @param $query
+     * @param $sql
+     */
+    public function insert($query, $sql)
+    {
+        return $this->runCommon($query,$sql);
+    }
+
+    /**
+     * 删除数据
+     * @param $query
+     * @param $sql
+     */
+    public function delete($query, $sql)
+    {
+        return $this->runCommon($query, $sql);
+    }
+
+    /**
+     * 更新数据
+     * @param $query
+     * @param $sql
+     */
+    public function update($query, $sql)
+    {
+        return $this->runCommon($query,$sql);
+    }
+
+    public function select($query, $sql){
+        return $this->runSelect($query,$sql);
+    }
+
+    /**
      * select查询
      * @param Query $query
      * @param $sql
@@ -141,39 +175,9 @@ class Execute
         return $this->resultContainer->columns($this->result, $fields);
     }
 
-    /**
-     * 请求数据
-     */
-    public function queryData()
-    {
 
-    }
 
-    /**
-     * 更新数据
-     */
-    public function update()
-    {
 
-    }
-
-    /**
-     * 添加数据
-     */
-    public function insert()
-    {
-
-    }
-
-    /**
-     * 删除数据
-     * @param $query
-     * @param $sql
-     */
-    public function delete($query, $sql)
-    {
-        return $this->runCommon($query, $sql);
-    }
 
 
 }

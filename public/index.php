@@ -69,11 +69,12 @@ $where3['last'] = [
 //$data = \Panda\facade\Db::table('test')->field('id','name')->where('id','>',2)->sum('id');
 //$data = \Panda\facade\Db::table('first')->where('id','>',42)->value('id');
 //$data = \Panda\facade\Db::table('first')->where('id','=',43)->where('name','=',1)->delete();
-$insert = [
-    'name'=>'插入数据',
-    'inter'=>14
+$update = [
+    'name'=>'更新数据',
+    'inter'=>155
 ];
-$data = \Panda\facade\Db::table('first')->insert($insert);
+//$data = \Panda\facade\Db::table('first')->insert($insert);
+$data = \Panda\facade\Db::table('first')->where('id','=',60)->update($update);
 var_dump($data);
 
 ;

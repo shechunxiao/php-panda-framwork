@@ -63,14 +63,19 @@ class Builder
 
     /**
      * 更新sql
+     * @param Query $query
+     * @return string
      */
     public function sqlForUpdate(Query $query)
     {
-
+        $sql = $this->dealSqlUpdate($query);
+        return $this->sqlLastConcat($sql);
     }
 
     /**
      * 增加sql
+     * @param Query $query
+     * @return string
      */
     public function sqlForInsert(Query $query)
     {
@@ -124,9 +129,23 @@ class Builder
      */
     public function dealSqlInsert($query)
     {
+        $insertResolve = $this->insertResolve($query->insertKeys);
         $sql['table'] = 'insert into ' . $this->escapeValue($query->table);
-        $sql['keys'] = $this->insertResolve($query->data)['keys'];
-        $sql['values'] = $this->insertResolve($query->data)['values'];
+        $sql['keys'] = $insertResolve['keys'];
+        $sql['values'] = $insertResolve['values'];
+        return $sql;
+    }
+
+    /**
+     * 获取update的sql语句
+     * @param $query
+     * @return mixed
+     */
+    public function dealSqlUpdate($query)
+    {
+        $sql['table'] = 'update ' . $this->escapeValue($query->table) . ' set';
+        $sql['set'] = $this->updateResolve($query->updateKeys);
+        $sql['wheres'] = $this->wheresResolve($query->wheres);
         return $sql;
     }
 
@@ -356,11 +375,35 @@ class Builder
         return 'offset ' . $item;
     }
 
-    public function insertResolve($data)
+    /**
+     * 解析插入的keys
+     * @param $keys
+     * @return array
+     */
+    public function insertResolve($keys)
     {
-        $keys = implode(',', $this->escapeValue(array_keys($data)));
-        $values = implode(',', array_values($data));
+        $values = '';
+        foreach ($keys as &$key) {
+            $key = $this->escapeValue($key);
+            $values .= '?,';
+        }
+        $keys = '(' . implode(',', $keys) . ')';
+        $values = 'values (' . trim($values, ',') . ')';
         return ['keys' => $keys, 'values' => $values];
+    }
+
+    /**
+     * 解析更新的字段
+     * @param $keys
+     * @return string
+     */
+    public function updateResolve($keys)
+    {
+        $set = '';
+        foreach ($keys as $key){
+            $set .= $this->escapeValue($key).'= ? ,';
+        }
+        return trim($set,',');
     }
 
     /**
@@ -388,7 +431,7 @@ class Builder
      */
     public function sqlLastConcat($sql)
     {
-        return implode(' ', $sql);
+        return !empty($sql) ? implode(' ', $sql) : '';
     }
 
 

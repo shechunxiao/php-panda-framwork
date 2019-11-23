@@ -35,19 +35,24 @@ class Query
     public $execute;
 
     /**
-     * 需要插入的数据
+     * 需要插入的keys数据
      * @var
      */
-    public $data = [];
+    public $insertKeys = [];
     /**
-     * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定
+     * 需要更新的keys数据
+     * @var array
+     */
+    public $updateKeys = [];
+    /**
+     * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定(里面的顺序不可更改)
      * @var array
      */
     public $binds = [
-//        'joins' => [],
+        'update' => [],
         'wheres' => [],
-//        'orders' => [],
         'havings' => [],
+        'insert' => [],
     ];
     /**
      * 用于操作的表名
@@ -430,12 +435,14 @@ class Query
 
     /**
      * 增加
+     * @param $data
      */
     public function insert($data)
     {
-        $this->data = $data;
+        $this->insertKeys = array_keys($data);
+        $this->addBinds(array_values($data), 'insert');
         $sql = $this->builder->sqlForInsert($this);
-        var_dump($sql);
+        return $this->execute->insert($this, $sql);
     }
 
     /**
@@ -444,15 +451,19 @@ class Query
     public function delete()
     {
         $sql = $this->builder->sqlForDelete($this);
-        return $this->execute->delete($this,$sql);
+        return $this->execute->delete($this, $sql);
     }
 
     /**
-     * 改
+     * 更新
+     * @param $data
      */
-    public function update()
+    public function update($data)
     {
-
+        $this->updateKeys = array_keys($data);
+        $this->addBinds(array_values($data), 'update');
+        $sql = $this->builder->sqlForUpdate($this);
+        return $this->execute->update($this, $sql);
     }
 
     /**
@@ -482,7 +493,7 @@ class Query
     public function columns($parameters)
     {
         $sql = $this->builder->sqlForSelect($this);
-        return $this->execute->columns($this, $sql,$parameters);
+        return $this->execute->columns($this, $sql, $parameters);
     }
 
     /**
@@ -490,7 +501,7 @@ class Query
      * @param null $field
      * @return
      */
-    public function value($field=null)
+    public function value($field = null)
     {
         return $this->first()[$field];
     }
