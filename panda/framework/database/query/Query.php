@@ -334,7 +334,7 @@ class Query
      * @param $argument
      * @return void
      */
-    public function max($argument)
+    public function max($argument = null)
     {
         return $this->aggregate('max', $argument);
     }
@@ -344,7 +344,7 @@ class Query
      * @param $argument
      * @return int
      */
-    public function min($argument)
+    public function min($argument = null)
     {
         return $this->aggregate('min', $argument);
     }
@@ -354,7 +354,7 @@ class Query
      * @param $argument
      * @return void
      */
-    public function avg($argument)
+    public function avg($argument = null)
     {
         return $this->aggregate('avg', $argument);
     }
@@ -364,7 +364,7 @@ class Query
      * @param $argument
      * @return void
      */
-    public function sum($argument)
+    public function sum($argument = null)
     {
         return $this->aggregate('sum', $argument);
     }
@@ -377,19 +377,6 @@ class Query
     public function count($argument = '*')
     {
         return $this->aggregate('count', $argument);
-    }
-
-    /**
-     * 聚合函数统一处理函数
-     * @param $name
-     * @param $argument
-     * @return void
-     */
-    public function aggregate($name, $argument)
-    {
-        $this->aggregate = ['name' => $name, 'argument' => $argument];
-        $sql = $this->builder->sqlForAggregate($this);
-        return $this->execute->runAggregate($this, $sql);
     }
 
     /**
@@ -472,7 +459,7 @@ class Query
     public function select()
     {
         $sql = $this->builder->sqlForSelect($this);
-        return $this->execute->runSelect($this, $sql);
+        return $this->execute->select($this, $sql);
     }
 
     /**
@@ -506,99 +493,18 @@ class Query
         return $this->first()[$field];
     }
 
-//    /**
-//     * 查询全部
-//     */
-//    public function select($method = null)
-//    {
-//        $pdo = $this->getPdo();
-//        //获取最终要执行的语句
-//        if (is_null($method)) {
-//            $method = __FUNCTION__;
-//        }
-//        $arguments = $this->resolveParams();
-//        $sql = $this->builder->getSql($arguments, $method);
-//        try {
-//            $PDOStatement = $pdo->query($sql);
-//            $result = $PDOStatement->fetchAll();
-//            return $result;
-//        } catch (\PDOException $e) {
-//            //这个地方需要限制次数,如果不加限制，就死循环了
-////            $this->flush()->$method();
-//            var_dump($sql);
-//            echo $e->getLine() . '/' . $e->getMessage();
-//            die();
-//        }
-//    }
-//
-//    /**
-//     * 查询一条语句（limit 1）
-//     */
-//    public function first()
-//    {
-//        return $this->select('first');
-//    }
-//
-//    /**
-//     * 更新
-//     */
-//    public function update($data)
-//    {
-//        $pdo = $this->getPdo();
-//        //获取最终要执行的语句
-//        $method = __FUNCTION__;
-//        $arguments = $this->resolveParams();
-//        $sql = $this->builder->getSql($arguments, $method, $data);
-//        try {
-//            $result = $pdo->exec($sql);
-//            return $result;
-//        } catch (\PDOException $e) {
-//            var_dump($sql);
-//            echo $e->getLine() . '/' . $e->getMessage();
-//            die();
-//        }
-//    }
-//
-//    /**
-//     * 删除
-//     */
-//    public function delete()
-//    {
-//        $pdo = $this->getPdo();
-//        //获取最终要执行的语句
-//        $method = __FUNCTION__;
-//        $arguments = $this->resolveParams();
-//        $sql = $this->builder->getSql($arguments, $method);
-//        try {
-//            $result = $pdo->exec($sql);
-//            return $result;
-//        } catch (\PDOException $e) {
-//            var_dump($sql);
-//            echo $e->getLine() . '/' . $e->getMessage();
-//            die();
-//        }
-//    }
-//
-//    /**
-//     * 添加
-//     */
-//    public function insert($data)
-//    {
-//        $pdo = $this->getPdo();
-//        //获取最终要执行的语句
-//        $method = __FUNCTION__;
-//        $arguments = $this->resolveParams();
-//        $sql = $this->builder->getSql($arguments, $method, $data);
-////        var_dump($sql);die();
-//        try {
-//            $result = $pdo->exec($sql);
-//            return $result;
-//        } catch (\PDOException $e) {
-//            var_dump($sql);
-//            echo $e->getLine() . '/' . $e->getMessage();
-//            die();
-//        }
-//    }
+    /**
+     * 聚合函数统一处理函数
+     * @param $name
+     * @param $argument
+     * @return void
+     */
+    public function aggregate($name, $argument)
+    {
+        $this->aggregate = ['name' => $name, 'argument' => $argument];
+        $sql = $this->builder->sqlForAggregate($this);
+        return $this->execute->runAggregate($this, $sql);
+    }
 
 
 }

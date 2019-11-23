@@ -67,14 +67,18 @@ $where3['last'] = [
 //    ->select();
 //var_dump($data);
 //$data = \Panda\facade\Db::table('test')->field('id','name')->where('id','>',2)->sum('id');
-//$data = \Panda\facade\Db::table('first')->where('id','>',42)->value('id');
-//$data = \Panda\facade\Db::table('first')->where('id','=',43)->where('name','=',1)->delete();
-$update = [
-    'name'=>'更新数据',
-    'inter'=>155
-];
-//$data = \Panda\facade\Db::table('first')->insert($insert);
-$data = \Panda\facade\Db::table('first')->where('id','=',60)->update($update);
+$data = \Panda\facade\Db::table('first')->field('id','name')->where('id','>',42)->select();
+//$data = \Panda\facade\Db::table('first')->where('id','=',44)->delete();
+//$update = [
+//    'name'=>'更新数据',
+//    'inter'=>32432
+//];
+//$insert = [
+//    'name'=>'插入数据',
+//    'inter'=>155
+//];
+////$data = \Panda\facade\Db::table('first')->insert($insert);
+//$data = \Panda\facade\Db::table('first')->where('id','=',60)->update($update);
 var_dump($data);
 
 ;

@@ -35,7 +35,7 @@ class Execute
      */
     public function insert($query, $sql)
     {
-        return $this->runCommon($query,$sql);
+        return $this->runCommon($query, $sql);
     }
 
     /**
@@ -55,11 +55,18 @@ class Execute
      */
     public function update($query, $sql)
     {
-        return $this->runCommon($query,$sql);
+        return $this->runCommon($query, $sql);
     }
 
-    public function select($query, $sql){
-        return $this->runSelect($query,$sql);
+    /**
+     * 查询数据
+     * @param $query
+     * @param $sql
+     * @return mixed
+     */
+    public function select($query, $sql)
+    {
+        return $this->runSelect($query, $sql);
     }
 
     /**
@@ -70,9 +77,7 @@ class Execute
      */
     public function runSelect($query, $sql)
     {
-        if (is_null($pdo = $query->pdo)) {
-            $pdo = $query->getPdo();
-        }
+        $pdo = $query->getPdo();
         //捕获相关错误
         try {
             $statement = $pdo->prepare($sql);
@@ -97,9 +102,7 @@ class Execute
      */
     public function runCommon($query, $sql)
     {
-        if (is_null($pdo = $query->pdo)) {
-            $pdo = $query->getPdo();
-        }
+        $pdo = $query->getPdo();
         //捕获相关错误
         try {
             $statement = $pdo->prepare($sql);
@@ -158,7 +161,7 @@ class Execute
      */
     public function first($query, $sql)
     {
-        $this->runSelect($query, $sql);
+        $this->select($query, $sql);
         return $this->result[0];
     }
 
@@ -174,10 +177,6 @@ class Execute
         $this->runSelect($query, $sql);
         return $this->resultContainer->columns($this->result, $fields);
     }
-
-
-
-
 
 
 }
