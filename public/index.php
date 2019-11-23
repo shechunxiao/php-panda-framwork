@@ -90,7 +90,7 @@ $insert = [
 ];
 $data = \Panda\facade\Db::table('first')->insertGetId($insert);
 $data = \Panda\facade\Db::table('first')->where('id','=',10)->delete();
-\Panda\facade\Db::rollBack();
-//\Panda\facade\Db::commit();
+//\Panda\facade\Db::rollBack();
+\Panda\facade\Db::commit();
 
 ;
