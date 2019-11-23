@@ -56,6 +56,7 @@ class Db
     {
         $type = $this->getConnectType();
         if (!isset($this->connect[$type])) {
+            var_dump('连接不存在');
             $this->connect[$type] = $this->createConnect->connect($type);
         }
         return $this->connect[$type];

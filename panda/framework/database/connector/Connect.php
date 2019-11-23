@@ -8,6 +8,11 @@ use PDO;
 class Connect
 {
     /**
+     * 事务开启的数量,目的是为了直接commit或者rollback而没开启事务造成一些异常
+     * @var int
+     */
+    public $transactions = 0;
+    /**
      * PDO属性
      * @var array
      */

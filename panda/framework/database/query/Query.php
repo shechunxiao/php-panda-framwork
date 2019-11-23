@@ -44,6 +44,12 @@ class Query
      * @var array
      */
     public $updateKeys = [];
+
+//    /**
+//     * 事务开启的数量,目的是为了直接commit或者rollback而没开启事务造成一些异常
+//     * @var int
+//     */
+//    public $transactions = 0;
     /**
      * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定(里面的顺序不可更改)
      * @var array
@@ -516,6 +522,47 @@ class Query
         $this->aggregate = ['name' => $name, 'argument' => $argument];
         $sql = $this->builder->sqlForAggregate($this);
         return $this->execute->runAggregate($this, $sql);
+    }
+
+    /**以下为事务的处理，mysql是支持事务保存点的，我们初始版本不做支持*/
+
+    /**
+     * 开启事务
+     */
+    public function beginTransaction()
+    {
+//        if ($this->transactions == 0) {
+//            try {
+//                $this->getPdo()->beginTransaction();
+//            } catch (\Exception $e) {
+//                echo $e->getMessage();
+//            }
+//        }
+//        $this->transactions = $this->transactions + 1;
+//        var_dump($this->transactions);
+    }
+
+    /**
+     * 回滚事务
+     */
+    public function rollBack()
+    {
+//        //如果事务数量为0，那么不需要回滚
+//        if ($this->transactions >= 1) {
+//            $this->getPdo()->rollBack();
+//        }
+    }
+
+    /**
+     * 提交
+     */
+    public function commit()
+    {
+        if ($this->transactions == 1) {
+            $this->getPdo()->commit();
+        }
+        //这个的目的是为了如果没有执行beginTransaction开启事务就commit了，造成事务数为-1,默认连接数应该是0
+        $this->transactions = max(0, $this->transactions - 1);
     }
 
 
