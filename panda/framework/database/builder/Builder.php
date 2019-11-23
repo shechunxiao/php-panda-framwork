@@ -42,7 +42,7 @@ class Builder
     {
         $sql = $this->dealSqlOrders($query);
         unset($sql['aggregate']);
-        if (!empty($sql)){
+        if (!empty($sql)) {
             return $this->sqlLastConcat($sql);
         }
     }
@@ -56,7 +56,7 @@ class Builder
     {
         $sql = $this->dealSqlOrders($query);
         unset($sql['fields']);
-        if (!empty($sql)){
+        if (!empty($sql)) {
             return $this->sqlLastConcat($sql);
         }
     }
@@ -287,11 +287,10 @@ class Builder
         foreach ($item as $value) {
             $havings[] = "{$value['where']} {$this->escapeValue($value['field'])}{$value['exp']} ? ";
         }
-        if (!empty($havings = $this->devLeftExp($this->resolveArrayJoint((array)$havings)))){
+        if (!empty($havings = $this->devLeftExp($this->resolveArrayJoint((array)$havings)))) {
             return 'having ' . $havings;
         }
         return '';
-
     }
 
     /**
@@ -315,7 +314,7 @@ class Builder
      */
     public function limitResolve($item)
     {
-        return $item;
+        return 'limit ' . $item;
     }
 
     /**
@@ -325,7 +324,7 @@ class Builder
      */
     public function offsetResolve($item)
     {
-        return $item;
+        return 'offset ' . $item;
     }
 
     /**

@@ -57,7 +57,7 @@ class Query
      *  字段
      * @var
      */
-    public $fields;
+    public $fields = ['*'];
     /**
      * 关联查询
      * @var
@@ -363,7 +363,7 @@ class Query
      * @param $argument
      * @return void
      */
-    public function count($argument='*')
+    public function count($argument = '*')
     {
         return $this->aggregate('count', $argument);
     }
@@ -378,7 +378,7 @@ class Query
     {
         $this->aggregate = ['name' => $name, 'argument' => $argument];
         $sql = $this->builder->sqlForAggregate($this);
-        return $this->execute->runAggregate($this,$sql);
+        return $this->execute->runAggregate($this, $sql);
     }
 
     /**
@@ -452,7 +452,8 @@ class Query
     public function select()
     {
         $sql = $this->builder->sqlForSelect($this);
-        return $this->execute->runSelect($this,$sql);
+        var_dump($sql);
+        return $this->execute->runSelect($this, $sql);
     }
 
     /**
@@ -460,7 +461,8 @@ class Query
      */
     public function first()
     {
-
+        $this->limit(1);
+        return $this->select();
     }
 
     /**
