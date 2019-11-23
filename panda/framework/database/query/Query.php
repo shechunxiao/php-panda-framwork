@@ -433,6 +433,18 @@ class Query
     }
 
     /**
+     * 添加数据并返回id值
+     * @param $data
+     * @return mixed
+     */
+    public function insertGetId($data)
+    {
+        $this->insert($data);
+        $id = $this->getPdo()->lastInsertId();
+        return is_numeric($id) ? (int)$id : $id;
+    }
+
+    /**
      * 删除
      */
     public function delete()
