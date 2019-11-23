@@ -9,10 +9,10 @@ use Panda\database\execute\Execute;
 class Query
 {
     /**
-     * pdo连接
+     * pdo连接,改成了静态变量，因为如果不是静态的事务回滚和提交追踪不到相应的pdo连接
      * @var
      */
-    public $pdo;
+    public static $pdo;
     /**
      * 容器，为了获取database的配置参数
      * @var Container
@@ -45,11 +45,11 @@ class Query
      */
     public $updateKeys = [];
 
-//    /**
-//     * 事务开启的数量,目的是为了直接commit或者rollback而没开启事务造成一些异常
-//     * @var int
-//     */
-//    public $transactions = 0;
+    /**
+     * 事务开启的数量,目的是为了直接commit或者rollback而没开启事务造成一些异常
+     * @var int
+     */
+    private static $transactions = 0;
     /**
      * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定(里面的顺序不可更改)
      * @var array
@@ -110,6 +110,9 @@ class Query
      * @var
      */
     public $offset;
+    /**
+     * @var int
+     */
 
     /**
      * 构造函数
@@ -401,10 +404,11 @@ class Query
      */
     public function getPdo()
     {
-        if (empty($this->pdo)) {
-            return $this->pdo = $this->connector->getConnect($this->getConfig());
+        if (empty(static::$pdo)) {
+            echo 'pdo为空了，新建了';
+            return static::$pdo = $this->connector->getConnect($this->getConfig());
         }
-        return $this->pdo;
+        return static::$pdo;
     }
 
     /**
@@ -422,7 +426,7 @@ class Query
      */
     public function flush()
     {
-        $this->pdo = null;
+        static::$pdo = null;
         return $this;
     }
 
@@ -531,15 +535,14 @@ class Query
      */
     public function beginTransaction()
     {
-//        if ($this->transactions == 0) {
-//            try {
-//                $this->getPdo()->beginTransaction();
-//            } catch (\Exception $e) {
-//                echo $e->getMessage();
-//            }
-//        }
-//        $this->transactions = $this->transactions + 1;
-//        var_dump($this->transactions);
+        if (static::$transactions == 0) {
+            try {
+                $this->getPdo()->beginTransaction();
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+            }
+        }
+        static::$transactions += 1;
     }
 
     /**
@@ -547,10 +550,10 @@ class Query
      */
     public function rollBack()
     {
-//        //如果事务数量为0，那么不需要回滚
-//        if ($this->transactions >= 1) {
-//            $this->getPdo()->rollBack();
-//        }
+        //如果事务数量为0，那么不需要回滚
+        if (static::$transactions >= 1) {
+            $this->getPdo()->rollBack();
+        }
     }
 
     /**
@@ -558,11 +561,11 @@ class Query
      */
     public function commit()
     {
-        if ($this->transactions == 1) {
+        if (static::$transactions == 1) {
             $this->getPdo()->commit();
         }
         //这个的目的是为了如果没有执行beginTransaction开启事务就commit了，造成事务数为-1,默认连接数应该是0
-        $this->transactions = max(0, $this->transactions - 1);
+        static::$transactions = max(0, static::$transactions - 1);
     }
 
 

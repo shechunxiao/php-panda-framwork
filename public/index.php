@@ -67,7 +67,8 @@ $where3['last'] = [
 //    ->select();
 //var_dump($data);
 //$data = \Panda\facade\Db::table('test')->field('id','name')->where('id','>',2)->sum('id');
-//$data = \Panda\facade\Db::table('first')->field('id','name')->where('id','>',42)->select();
+$data = \Panda\facade\Db::table('first')->field('id','name')->where('id','>',1)->sum('id');
+var_dump($data);
 //$data = \Panda\facade\Db::table('first')->where('id','=',44)->delete();
 //$update = [
 //    'name'=>'更新数据',
@@ -81,13 +82,15 @@ $where3['last'] = [
 //$data = \Panda\facade\Db::table('first')->where('id','=',60)->update($update);
 //var_dump($data);
 
-\Panda\facade\Db::beginTransaction();
-$insert = [
-    'name'=>'插入321321',
-    'inter'=>155
-];
-$data = \Panda\facade\Db::table('first')->insertGetId($insert);
-\Panda\facade\Db::rollBack();
+//事务的实现
+//\Panda\facade\Db::beginTransaction();
+//$insert = [
+//    'name'=>'插入321321',
+//    'inter'=>155
+//];
+//$data = \Panda\facade\Db::table('first')->insertGetId($insert);
+//$data = \Panda\facade\Db::table('first')->where('id','=',10)->delete();
+////\Panda\facade\Db::rollBack();
 //\Panda\facade\Db::commit();
 
 ;
