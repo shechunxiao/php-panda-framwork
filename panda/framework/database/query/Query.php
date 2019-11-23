@@ -405,7 +405,6 @@ class Query
     public function getPdo()
     {
         if (empty(static::$pdo)) {
-            echo 'pdo为空了，新建了';
             return static::$pdo = $this->connector->getConnect($this->getConfig());
         }
         return static::$pdo;
