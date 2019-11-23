@@ -66,7 +66,7 @@ $where3['last'] = [
 ////    ->max('id')
 //    ->select();
 //var_dump($data);
-$data = \Panda\facade\Db::table('test')->field('id','name')->where('id','>',2)->sum('id');
+$data = \Panda\facade\Db::table('test')->field('id','name')->where('last','=',1)->where('id','>',2)->sum('id');
 var_dump($data);
 
 ;

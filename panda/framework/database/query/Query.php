@@ -321,7 +321,7 @@ class Query
     /**
      * 最大值
      * @param $argument
-     * @return int
+     * @return void
      */
     public function max($argument)
     {
@@ -341,7 +341,7 @@ class Query
     /**
      * 平均值
      * @param $argument
-     * @return int
+     * @return void
      */
     public function avg($argument)
     {

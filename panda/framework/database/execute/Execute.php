@@ -21,15 +21,19 @@ class Execute
         if (is_null($pdo = $query->pdo)){
             $pdo = $query->getPdo();
         }
-        //预处理
-        $statement = $pdo->prepare($sql);
-        if ($binds = $this->getBinds($query->binds)){
-            foreach($binds as $key=>$value){
-                $statement->bindValue($key+1,$value);
+        //捕获相关错误
+        try{
+            $statement = $pdo->prepare($sql);
+            if ($binds = $this->getBinds($query->binds)){
+                foreach($binds as $key=>$value){
+                    $statement->bindValue($key+1,$value);
+                }
             }
+            $statement->execute();
+            $result = $statement->fetchAll();
+        }catch (\PDOException $e){
+            echo $e->getMessage().' Line:'.$e->getLine().' File'.$e->getFile();die();
         }
-        $statement->execute();
-        $result = $statement->fetchAll();
         return $result;
     }
 
