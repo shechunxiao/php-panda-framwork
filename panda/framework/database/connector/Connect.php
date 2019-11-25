@@ -7,6 +7,7 @@ use PDO;
 
 class Connect
 {
+
     /**
      * PDO属性
      * @var array

@@ -9,10 +9,10 @@ use Panda\database\execute\Execute;
 class Query
 {
     /**
-     * pdo连接
+     * pdo连接,改成了静态变量，因为如果不是静态的事务回滚和提交追踪不到相应的pdo连接
      * @var
      */
-    public $pdo;
+    public static $pdo;
     /**
      * 容器，为了获取database的配置参数
      * @var Container
@@ -33,15 +33,32 @@ class Query
      * @var Execute
      */
     public $execute;
+
     /**
-     * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定
+     * 需要插入的keys数据
+     * @var
+     */
+    public $insertKeys = [];
+    /**
+     * 需要更新的keys数据
+     * @var array
+     */
+    public $updateKeys = [];
+
+    /**
+     * 事务开启的数量,目的是为了直接commit或者rollback而没开启事务造成一些异常
+     * @var int
+     */
+    private static $transactions = 0;
+    /**
+     * 需要处理的绑定,便于生成sql的时候直接调用,最主要是为了实现参数绑定(里面的顺序不可更改)
      * @var array
      */
     public $binds = [
-//        'joins' => [],
+        'update' => [],
         'wheres' => [],
-//        'orders' => [],
         'havings' => [],
+        'insert' => [],
     ];
     /**
      * 用于操作的表名
@@ -57,7 +74,7 @@ class Query
      *  字段
      * @var
      */
-    public $fields;
+    public $fields = ['*'];
     /**
      * 关联查询
      * @var
@@ -93,6 +110,9 @@ class Query
      * @var
      */
     public $offset;
+    /**
+     * @var int
+     */
 
     /**
      * 构造函数
@@ -321,9 +341,9 @@ class Query
     /**
      * 最大值
      * @param $argument
-     * @return int
+     * @return void
      */
-    public function max($argument)
+    public function max($argument = null)
     {
         return $this->aggregate('max', $argument);
     }
@@ -333,7 +353,7 @@ class Query
      * @param $argument
      * @return int
      */
-    public function min($argument)
+    public function min($argument = null)
     {
         return $this->aggregate('min', $argument);
     }
@@ -341,9 +361,9 @@ class Query
     /**
      * 平均值
      * @param $argument
-     * @return int
+     * @return void
      */
-    public function avg($argument)
+    public function avg($argument = null)
     {
         return $this->aggregate('avg', $argument);
     }
@@ -353,7 +373,7 @@ class Query
      * @param $argument
      * @return void
      */
-    public function sum($argument)
+    public function sum($argument = null)
     {
         return $this->aggregate('sum', $argument);
     }
@@ -363,22 +383,9 @@ class Query
      * @param $argument
      * @return void
      */
-    public function count($argument='*')
+    public function count($argument = '*')
     {
         return $this->aggregate('count', $argument);
-    }
-
-    /**
-     * 聚合函数统一处理函数
-     * @param $name
-     * @param $argument
-     * @return void
-     */
-    public function aggregate($name, $argument)
-    {
-        $this->aggregate = ['name' => $name, 'argument' => $argument];
-        $sql = $this->builder->sqlForAggregate($this);
-        return $this->execute->runAggregate($this,$sql);
     }
 
     /**
@@ -397,10 +404,10 @@ class Query
      */
     public function getPdo()
     {
-        if (empty($this->pdo)) {
-            return $this->pdo = $this->connector->getConnect($this->getConfig());
+        if (empty(static::$pdo)) {
+            return static::$pdo = $this->connector->getConnect($this->getConfig());
         }
-        return $this->pdo;
+        return static::$pdo;
     }
 
     /**
@@ -418,16 +425,32 @@ class Query
      */
     public function flush()
     {
-        $this->pdo = null;
+        static::$pdo = null;
         return $this;
     }
 
     /**
      * 增加
+     * @param $data
      */
-    public function insert()
+    public function insert($data)
     {
+        $this->insertKeys = array_keys($data);
+        $this->addBinds(array_values($data), 'insert');
+        $sql = $this->builder->sqlForInsert($this);
+        return $this->execute->insert($this, $sql);
+    }
 
+    /**
+     * 添加数据并返回id值
+     * @param $data
+     * @return mixed
+     */
+    public function insertGetId($data)
+    {
+        $this->insert($data);
+        $id = $this->getPdo()->lastInsertId();
+        return is_numeric($id) ? (int)$id : $id;
     }
 
     /**
@@ -435,15 +458,20 @@ class Query
      */
     public function delete()
     {
-        echo '12312321';
+        $sql = $this->builder->sqlForDelete($this);
+        return $this->execute->delete($this, $sql);
     }
 
     /**
-     * 改
+     * 更新
+     * @param $data
      */
-    public function update()
+    public function update($data)
     {
-
+        $this->updateKeys = array_keys($data);
+        $this->addBinds(array_values($data), 'update');
+        $sql = $this->builder->sqlForUpdate($this);
+        return $this->execute->update($this, $sql);
     }
 
     /**
@@ -452,7 +480,7 @@ class Query
     public function select()
     {
         $sql = $this->builder->sqlForSelect($this);
-        return $this->execute->runSelect($this,$sql);
+        return $this->execute->select($this, $sql);
     }
 
     /**
@@ -460,118 +488,85 @@ class Query
      */
     public function first()
     {
-
+        $this->limit(1);
+        $sql = $this->builder->sqlForSelect($this);
+        return $this->execute->first($this, $sql);
     }
 
     /**
      * 获取某一列
+     * @param array $parameters
+     * @return array
      */
-    public function columns()
+    public function columns($parameters)
     {
-
+        $sql = $this->builder->sqlForSelect($this);
+        return $this->execute->columns($this, $sql, $parameters);
     }
 
     /**
      * 获取某一条记录的某一个值
+     * @param null $field
+     * @return
      */
-    public function value()
+    public function value($field = null)
     {
-
+        return $this->first()[$field];
     }
 
-//    /**
-//     * 查询全部
-//     */
-//    public function select($method = null)
-//    {
-//        $pdo = $this->getPdo();
-//        //获取最终要执行的语句
-//        if (is_null($method)) {
-//            $method = __FUNCTION__;
-//        }
-//        $arguments = $this->resolveParams();
-//        $sql = $this->builder->getSql($arguments, $method);
-//        try {
-//            $PDOStatement = $pdo->query($sql);
-//            $result = $PDOStatement->fetchAll();
-//            return $result;
-//        } catch (\PDOException $e) {
-//            //这个地方需要限制次数,如果不加限制，就死循环了
-////            $this->flush()->$method();
-//            var_dump($sql);
-//            echo $e->getLine() . '/' . $e->getMessage();
-//            die();
-//        }
-//    }
-//
-//    /**
-//     * 查询一条语句（limit 1）
-//     */
-//    public function first()
-//    {
-//        return $this->select('first');
-//    }
-//
-//    /**
-//     * 更新
-//     */
-//    public function update($data)
-//    {
-//        $pdo = $this->getPdo();
-//        //获取最终要执行的语句
-//        $method = __FUNCTION__;
-//        $arguments = $this->resolveParams();
-//        $sql = $this->builder->getSql($arguments, $method, $data);
-//        try {
-//            $result = $pdo->exec($sql);
-//            return $result;
-//        } catch (\PDOException $e) {
-//            var_dump($sql);
-//            echo $e->getLine() . '/' . $e->getMessage();
-//            die();
-//        }
-//    }
-//
-//    /**
-//     * 删除
-//     */
-//    public function delete()
-//    {
-//        $pdo = $this->getPdo();
-//        //获取最终要执行的语句
-//        $method = __FUNCTION__;
-//        $arguments = $this->resolveParams();
-//        $sql = $this->builder->getSql($arguments, $method);
-//        try {
-//            $result = $pdo->exec($sql);
-//            return $result;
-//        } catch (\PDOException $e) {
-//            var_dump($sql);
-//            echo $e->getLine() . '/' . $e->getMessage();
-//            die();
-//        }
-//    }
-//
-//    /**
-//     * 添加
-//     */
-//    public function insert($data)
-//    {
-//        $pdo = $this->getPdo();
-//        //获取最终要执行的语句
-//        $method = __FUNCTION__;
-//        $arguments = $this->resolveParams();
-//        $sql = $this->builder->getSql($arguments, $method, $data);
-////        var_dump($sql);die();
-//        try {
-//            $result = $pdo->exec($sql);
-//            return $result;
-//        } catch (\PDOException $e) {
-//            var_dump($sql);
-//            echo $e->getLine() . '/' . $e->getMessage();
-//            die();
-//        }
-//    }
+    /**
+     * 聚合函数统一处理函数
+     * @param $name
+     * @param $argument
+     * @return void
+     */
+    public function aggregate($name, $argument)
+    {
+        $this->aggregate = ['name' => $name, 'argument' => $argument];
+        $sql = $this->builder->sqlForAggregate($this);
+        return $this->execute->runAggregate($this, $sql);
+    }
+
+    /**以下为事务的处理，mysql是支持事务保存点的，我们初始版本不做支持*/
+
+    /**
+     * 开启事务
+     */
+    public function beginTransaction()
+    {
+        if (static::$transactions == 0) {
+            try {
+                $this->getPdo()->beginTransaction();
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+            }
+        }
+        static::$transactions += 1;
+    }
+
+    /**
+     * 回滚事务
+     */
+    public function rollBack()
+    {
+        //如果事务数量为0，那么不需要回滚
+        if (static::$transactions >= 1) {
+            $this->getPdo()->rollBack();
+            static::$transactions -= 1;
+        }
+    }
+
+    /**
+     * 提交
+     */
+    public function commit()
+    {
+        if (static::$transactions == 1) {
+            $this->getPdo()->commit();
+        }
+        //这个的目的是为了如果没有执行beginTransaction开启事务就commit了，造成事务数为-1,默认连接数应该是0
+        static::$transactions = max(0, static::$transactions - 1);
+    }
 
 
 }

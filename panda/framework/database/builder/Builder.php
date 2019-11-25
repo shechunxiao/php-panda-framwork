@@ -42,7 +42,7 @@ class Builder
     {
         $sql = $this->dealSqlOrders($query);
         unset($sql['aggregate']);
-        if (!empty($sql)){
+        if (!empty($sql)) {
             return $this->sqlLastConcat($sql);
         }
     }
@@ -56,33 +56,42 @@ class Builder
     {
         $sql = $this->dealSqlOrders($query);
         unset($sql['fields']);
-        if (!empty($sql)){
+        if (!empty($sql)) {
             return $this->sqlLastConcat($sql);
         }
     }
 
     /**
      * 更新sql
+     * @param Query $query
+     * @return string
      */
-    public function sqlForUpdate()
+    public function sqlForUpdate(Query $query)
     {
-
+        $sql = $this->dealSqlUpdate($query);
+        return $this->sqlLastConcat($sql);
     }
 
     /**
      * 增加sql
+     * @param Query $query
+     * @return string
      */
-    public function sqlForInsert()
+    public function sqlForInsert(Query $query)
     {
-
+        $sql = $this->dealSqlInsert($query);
+        return $this->sqlLastConcat($sql);
     }
 
     /**
      * 删除sql
+     * @param Query $query
+     * @return string
      */
-    public function sqlForDelete()
+    public function sqlForDelete(Query $query)
     {
-
+        $sql = $this->dealSqlDelete($query);
+        return $this->sqlLastConcat($sql);
     }
 
     /**
@@ -98,6 +107,45 @@ class Builder
                 $sql[$item] = $this->{$item . 'Resolve'}($query->$item, $query);
             }
         }
+        return $sql;
+    }
+
+    /**
+     * 获取delete的sql语句
+     * @param $query
+     * @return mixed
+     */
+    public function dealSqlDelete($query)
+    {
+        $sql['table'] = 'delete ' . $this->tableResolve($query->table);
+        $sql['wheres'] = $this->wheresResolve($query->wheres);
+        return $sql;
+    }
+
+    /**
+     * 获取insert的sql语句
+     * @param $query
+     * @return mixed
+     */
+    public function dealSqlInsert($query)
+    {
+        $insertResolve = $this->insertResolve($query->insertKeys);
+        $sql['table'] = 'insert into ' . $this->escapeValue($query->table);
+        $sql['keys'] = $insertResolve['keys'];
+        $sql['values'] = $insertResolve['values'];
+        return $sql;
+    }
+
+    /**
+     * 获取update的sql语句
+     * @param $query
+     * @return mixed
+     */
+    public function dealSqlUpdate($query)
+    {
+        $sql['table'] = 'update ' . $this->escapeValue($query->table) . ' set';
+        $sql['set'] = $this->updateResolve($query->updateKeys);
+        $sql['wheres'] = $this->wheresResolve($query->wheres);
         return $sql;
     }
 
@@ -287,11 +335,10 @@ class Builder
         foreach ($item as $value) {
             $havings[] = "{$value['where']} {$this->escapeValue($value['field'])}{$value['exp']} ? ";
         }
-        if (!empty($havings = $this->devLeftExp($this->resolveArrayJoint((array)$havings)))){
+        if (!empty($havings = $this->devLeftExp($this->resolveArrayJoint((array)$havings)))) {
             return 'having ' . $havings;
         }
         return '';
-
     }
 
     /**
@@ -315,7 +362,7 @@ class Builder
      */
     public function limitResolve($item)
     {
-        return $item;
+        return 'limit ' . $item;
     }
 
     /**
@@ -325,7 +372,38 @@ class Builder
      */
     public function offsetResolve($item)
     {
-        return $item;
+        return 'offset ' . $item;
+    }
+
+    /**
+     * 解析插入的keys
+     * @param $keys
+     * @return array
+     */
+    public function insertResolve($keys)
+    {
+        $values = '';
+        foreach ($keys as &$key) {
+            $key = $this->escapeValue($key);
+            $values .= '?,';
+        }
+        $keys = '(' . implode(',', $keys) . ')';
+        $values = 'values (' . trim($values, ',') . ')';
+        return ['keys' => $keys, 'values' => $values];
+    }
+
+    /**
+     * 解析更新的字段
+     * @param $keys
+     * @return string
+     */
+    public function updateResolve($keys)
+    {
+        $set = '';
+        foreach ($keys as $key){
+            $set .= $this->escapeValue($key).'= ? ,';
+        }
+        return trim($set,',');
     }
 
     /**
@@ -353,7 +431,7 @@ class Builder
      */
     public function sqlLastConcat($sql)
     {
-        return implode(' ', $sql);
+        return !empty($sql) ? implode(' ', $sql) : '';
     }
 
 

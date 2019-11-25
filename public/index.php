@@ -6,67 +6,13 @@ require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $app = new \Panda\foundation\Application(dirname(__DIR__));
 
-///**
-// * 测试PDO prepare
-// */
-//$dbh = new PDO('mysql:host=localhost;dbname=shechunxiao', 'root', '');
-//$sql = 'select * from first';
-//$statement = $dbh->prepare($sql);
-//$statement->execute();
-////var_dump($statement->fetchAll());
-//
-//function wrapValue($value)
-//{
-//    if ($value === '*') {
-//        return $value;
-//    }
-//    return '`'.str_replace('`', '``', $value).'`';
-//}
+//研究路由的实现以及Exception报错和日志系统的实现方式
 
-
-
-
-
-//$a = 'id';
-//function tr($it){
-//    return "`".$it."`";
-//}
-//var_dump(tr($a));die();
-//$data = \Panda\facade\Db::table('first')->group('id','name','age')->where('id','>',50)->select();
-//$where['id'] = [
-//    ['>',1,'and'],
-//    ['<',10,'or']
-//];
-$where['id'] = ['>',1];
-$where[] = ['id', '>', 324232];
-$where[] = ['name', '=', '张三'];
-$where2['test'] = ['>', 100];
-
-$where3['last'] = [
-    ['>', 11,'and'],
-    ['<', 20, 'or']
-];
-//->where('id','>',1)
-//->where($where)
-//where($where2)
-//->where($where3)
-//$data = \Panda\facade\Db::table('first as f')->field('count(id) as mycount','inter')
-//    ->join('first_extend as fe','fe.first_id','=','f.id','left')
-//    ->where($where2)
-//    ->where($where3)
-//    ->whereOr('inner','>',1)
-//    ->orders('id','Desc')
-//    ->orders('inter','asc')
-//    ->group('id','name')
-//    ->offset(10)
-//    ->limit(1)
-//    ->having('id','>',1)
-//    ->having('inter','=',1)
-//    ->having('name','=',3)
-////    ->max('id')
-//    ->select();
-//var_dump($data);
-$data = \Panda\facade\Db::table('test')->field('id','name')->where('id','>',2)->sum('id');
-var_dump($data);
-
-;
+/**
+ * 基本构建思路:
+ *      1.服务提供者，必须有一个基类,所有的关键服务核心类都继承这个类
+ *      2.利用http-foundation 扩展实现http请求的处理
+ *      3.执行各个服务的boot方法，启动，原来只是注册
+ *      4.通过管道模式分发请求到执行的控制器和方法
+ *      5.最后用echo $content输出内容到浏览器上
+ */
