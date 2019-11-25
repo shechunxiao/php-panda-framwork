@@ -552,6 +552,7 @@ class Query
         //如果事务数量为0，那么不需要回滚
         if (static::$transactions >= 1) {
             $this->getPdo()->rollBack();
+            static::$transactions -= 1;
         }
     }
 
