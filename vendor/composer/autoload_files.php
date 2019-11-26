@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     '320cde22f66dd4f5d3fd621d3e88b98f' => $vendorDir . '/symfony/polyfill-ctype/bootstrap.php',
+    '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
+    '023d27dca8066ef29e6739335ea73bad' => $vendorDir . '/symfony/polyfill-php70/bootstrap.php',
     'aa0ae1c6141dc73052b641c7e37b17d9' => $baseDir . '/app/Function/function.php',
     '2bcbb3997d73d7c79e565277cbe2636e' => $baseDir . '/panda/framework/helper.php',
 );
