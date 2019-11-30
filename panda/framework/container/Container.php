@@ -3,9 +3,6 @@
 namespace Panda\container;
 
 use Closure;
-use Dotenv\Environment\VariablesInterface;
-use Panda\database\query\Query;
-use Panda\foundation\Application;
 use ReflectionException;
 
 class Container
@@ -73,7 +70,7 @@ class Container
      * @var array
      */
     protected $aliasArr = [
-        'application' => 'app'
+        'application' => 'app',
     ];
     /**
      * 需要注册的核心服务
