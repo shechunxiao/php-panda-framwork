@@ -6,6 +6,7 @@ use Closure;
 use Dotenv\Environment\VariablesInterface;
 use Panda\database\query\Query;
 use Panda\foundation\Application;
+use ReflectionException;
 
 class Container
 {
@@ -24,7 +25,7 @@ class Container
      */
 
     /**
-     * application实例化存放到静态变量中去,目的就是随时随地可以调用它进行实例化相关的服务，比如门面等地方
+     * application实例化对象，存放到静态变量中去,目的就是随时随地可以调用它进行实例化相关的服务，比如门面等地方
      * @var
      */
     protected static $instance;
@@ -83,13 +84,13 @@ class Container
     ];
 
     /**
-     * 配置文件
+     * 配置文件(以后要删掉的)
      * @var array
      */
     protected static $configs = [];
 
     /**
-     * 获取实例化的容器(存放在静态变量中的)
+     * 获取实例化的容器(存放在静态变量中的)-典型的单例模式
      */
     public static function getInstance()
     {
@@ -110,6 +111,11 @@ class Container
 
     /**
      * 绑定服务(如果是回调就绑定到回调数组，如果是对象就绑定到实例化数组)
+     * @param $abstract
+     * @param null $concrete
+     * @param bool $isSingle
+     * @return Container
+     * @throws ReflectionException
      */
     public function bind($abstract, $concrete = null, $isSingle = false)
     {
@@ -134,15 +140,33 @@ class Container
     /**
      * 重新实例化
      * @param $abstract
+     * @throws ReflectionException
      */
     public function resolve($abstract)
     {
         $this->instanceByClosure($abstract);
     }
 
+    /**
+     * 绑定并且实例化
+     * @param $abstract
+     * @param null $concrete
+     * @param bool $isSingle
+     * @param array $arguments
+     * @return mixed|object
+     * @throws ReflectionException
+     */
+    public function bindAndInstance($abstract, $concrete = null, $isSingle = false, $arguments = [])
+    {
+        return $this->bind($abstract, $concrete, $isSingle)->instanceByClosure($abstract, $arguments);
+    }
 
     /**
      * 通过绑定的回调函数实例化类
+     * @param $abstract
+     * @param array $par
+     * @return mixed|object
+     * @throws ReflectionException
      */
     public function instanceByClosure($abstract, $par = [])
     {
@@ -153,7 +177,7 @@ class Container
         //判断是否有上下文绑定
         $isNeedContext = $this->isNeedContext($abstract);
         //判断是否有实例存在
-        $getInstance = $this->getInstance($abstract);
+        $getInstance = $this->getInstance();
         //如果这个抽象的实例存在，则直接返回
         if ($getInstance && !$isNewInstance && !$isNeedContext) {
             return $getInstance;
@@ -174,6 +198,8 @@ class Container
 
     /**
      * 判断是否重新实例化
+     * @param $abstract
+     * @return bool
      */
     public function isNewInstance($abstract)
     {
@@ -185,6 +211,8 @@ class Container
 
     /**
      * 判断是否需要上下文,如果有则返回上下文
+     * @param $abstract
+     * @return bool|mixed
      */
     public function isNeedContext($abstract)
     {
@@ -199,6 +227,8 @@ class Container
 
     /**
      * 获取抽象类的实例化
+     * @param $abstract
+     * @return bool|mixed
      */
     public function getService($abstract)
     {
@@ -240,6 +270,10 @@ class Container
 
     /**
      * 解析回调函数
+     * @param $concrete
+     * @param $par
+     * @return mixed
+     * @throws ReflectionException
      */
     public function instanceResolveClosure($concrete, $par)
     {
@@ -266,6 +300,10 @@ class Container
 
     /**
      * 通过反射实例化类
+     * @param $concrete
+     * @param array $parameters
+     * @return object
+     * @throws ReflectionException
      */
     public function instanceByReflection($concrete, $parameters = [])
     {
@@ -305,6 +343,7 @@ class Container
      * 解析构造函数依赖项(如果是类就实例化，如果是接口就实例化具体实现)(make中实例化)
      * @param $params
      * @return array
+     * @throws ReflectionException
      */
     public function resolveArgs($params)
     {
@@ -319,6 +358,9 @@ class Container
 
     /**
      * 解析单个参数
+     * @param $param
+     * @return mixed|object
+     * @throws ReflectionException
      */
     public function resolveArg($param)
     {
@@ -329,6 +371,10 @@ class Container
 
     /**
      * 实例化一次(单例),放在绑定中，绑定的时候就指明实例化一次
+     * @param $abstract
+     * @param null $concrete
+     * @param bool $isSing
+     * @throws ReflectionException
      */
     public function single($abstract, $concrete = null, $isSing = true)
     {
@@ -338,6 +384,9 @@ class Container
 
     /**
      * 给服务绑定一个别名
+     * @param $abstract
+     * @param $name
+     * @return Container
      */
     public function alias($abstract, $name)
     {
@@ -361,7 +410,7 @@ class Container
     /**
      * 给服务绑定上下文绑定
      * @param $when
-     * @param $need
+     * @param $abstract
      * @param $concrete
      * @return $this
      */
@@ -371,13 +420,9 @@ class Container
         return $this;
     }
 
-    /**
-     * 绑定并且实例化
-     */
-    public function bindAndInstance($abstract, $concrete = null, $isSingle = false, $arguments = [])
-    {
-        return $this->bind($abstract, $concrete, $isSingle)->instanceByClosure($abstract, $arguments);
-    }
+
+
+    /*这里是配置文件，到后面要移除出去*/
 
     /**
      *  解析设置的配置参数
