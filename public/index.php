@@ -32,12 +32,7 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
  *      3.执行各个服务的boot方法，启动，原来只是注册
  *      4.通过管道模式分发请求到执行的控制器和方法
  *      5.最后用echo $content输出内容到浏览器上
-<<<<<<< .mine
  */
 
-
-=======
- */
 $request = new \Panda\http\Request();
 $request->init();
->>>>>>> .theirs
