@@ -34,5 +34,19 @@ $app = new \Panda\foundation\Application(dirname(__DIR__));
  *      5.最后用echo $content输出内容到浏览器上
  */
 
-$request = new \Panda\http\Request();
-$request->init();
+//$request = new \Panda\http\Request();
+//$request->init();
+//$arr = [1,2,3,4,5];
+//
+//echo array_reduce($arr,function($result,$value){
+//    echo $result.'-'.$value;
+//},1);
+//
+//$arr = array(
+//    array("id"=>1,'name'=>"a"),
+//    array("id"=>2,"name"=>"c"),
+//    array("id"=>3,"name"=>"d")
+//);
+
+
+
