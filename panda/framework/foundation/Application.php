@@ -81,6 +81,14 @@ class Application extends Container
 
         //注册路由
         $this->register(new RouterServiceProvider($this));
+
+
+//        //注册env
+//        $this->instances['env'] = new Env($this->instances['path']);
+//        //注册config里面的配置文件
+//        $this->resolveConfig();
+//        //注册所有门面对应的服务
+//        $this->instanceCoreService();
     }
 
     /**

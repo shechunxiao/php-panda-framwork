@@ -23,8 +23,13 @@ require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $app = new \Panda\foundation\Application(dirname(__DIR__));
 
-$app->single(\Panda\contract\Kernel::class);
+$app->single(\Panda\contract\Kernel::class,\App\Kernel::class);
 
+$kernel = $app->instance(\Panda\contract\Kernel::class);
+
+$response = $kernel->handle(new \Panda\http\Request());
+//
+//var_dump($response);
 
 
 //研究路由的实现以及Exception报错和日志系统的实现方式

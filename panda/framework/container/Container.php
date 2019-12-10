@@ -174,10 +174,10 @@ class Container
         //判断是否有上下文绑定
         $isNeedContext = $this->isNeedContext($abstract);
         //判断是否有实例存在
-        $getInstance = $this->getInstance();
+        $getService = $this->getService($abstract);
         //如果这个抽象的实例存在，则直接返回
-        if ($getInstance && !$isNewInstance && !$isNeedContext) {
-            return $getInstance;
+        if ($getService && !$isNewInstance && !$isNeedContext) {
+            return $getService;
         }
         //获取抽象实例
         $concrete = $this->getConcrete($abstract);
