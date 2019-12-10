@@ -72,7 +72,7 @@ class Application extends Container
      */
     public function instanceCore()
     {
-
+        
 
 
 

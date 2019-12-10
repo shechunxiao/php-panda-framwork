@@ -11,10 +11,11 @@ class Request extends SymRequest
         $request = Request::createFromGlobals();
 //        $ser = $request->server;
 //        $ser = $request->query;
-//        $ser = $request->request;
+        $ser = $request->request;
 //        $ser = $request->files;
 //        $ser = $request->files;
-        $ser = $request->query->all();
+//        $ser = $request->query->all();
+        var_dump($ser);
 //        $ser = $request->query->keys('name');
         $ser = $request->query->get('name');
         $ser = $request->query->getAlpha('name');
