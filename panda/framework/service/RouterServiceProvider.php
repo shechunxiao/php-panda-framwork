@@ -1,7 +1,7 @@
 <?php
 
 namespace Panda\service;
-use Panda\service\ServiceBase;
+use Panda\http\Router;
 
 class RouterServiceProvider extends ServiceBase
 {

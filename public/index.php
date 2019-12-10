@@ -23,6 +23,10 @@ require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $app = new \Panda\foundation\Application(dirname(__DIR__));
 
+$app->single(\Panda\contract\Kernel::class);
+
+
+
 //研究路由的实现以及Exception报错和日志系统的实现方式
 
 /**
