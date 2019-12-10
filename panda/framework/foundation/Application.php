@@ -2,8 +2,8 @@
 
 namespace Panda\foundation;
 
-use Panda\common\Env;
 use Panda\container\Container;
+use Panda\service\RouterServiceProvider;
 use ReflectionException;
 
 class Application extends Container
@@ -13,6 +13,11 @@ class Application extends Container
      * @var
      */
     protected $basePath;
+    /**
+     * 服务提供者
+     * @var array
+     */
+    protected $serviceProviders = [];
 
     /**
      * 初始化
@@ -68,13 +73,14 @@ class Application extends Container
     }
 
     /**
-     * 注册一些核心的服务
+     * 注册一些核心的服务提供者，我们这不需要延迟加载，所以就不考虑了
      */
     public function instanceCore()
     {
-        
+        //注册日志
 
-
+        //注册路由
+        $this->register(new RouterServiceProvider($this));
 
 
 //        //注册env
@@ -123,5 +129,31 @@ class Application extends Container
         }
     }
 
+    /**
+     *  注册服务提供者
+     * @param $service
+     * @param bool $force
+     * @return bool
+     */
+    public function register($service, $force = false)
+    {
+        if ($serviceProvider = $this->getServiceProvider($service) && !$force) {
+            return $serviceProvider;
+        }
+        if (method_exists($service, 'register')) {
+            $service->register();
+        }
+        return $service;
+    }
+
+    /**
+     *  获取服务
+     * @param $service
+     * @return bool|mixed
+     */
+    public function getServiceProvider($service)
+    {
+        return in_array($service,$this->serviceProviders) ? $service : false;
+    }
 
 }
